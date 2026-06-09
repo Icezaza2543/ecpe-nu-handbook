@@ -1,0 +1,369 @@
+.visual-maps-page {
+  gap: 28px;
+}
+
+.visual-card {
+  min-width: 0;
+  padding: 22px;
+}
+
+.graph-card {
+  height: 520px;
+}
+
+.graph-card .section-header {
+  margin-bottom: 12px;
+}
+
+.graph-card .react-flow {
+  height: calc(100% - 86px);
+  border-radius: var(--radius);
+  background: #f8fbff;
+}
+
+.react-flow-node-official,
+.react-flow-node-senior,
+.react-flow-node-danger {
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  font-size: 0.78rem;
+  white-space: pre-line;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.react-flow-node-danger {
+  border-color: rgba(225, 29, 72, 0.3);
+  background: #fff1f2;
+}
+
+.official-edge path {
+  stroke: var(--primary);
+}
+
+.senior-edge path {
+  stroke: var(--warning);
+  stroke-dasharray: 5 5;
+}
+
+.flow-root {
+  display: inline-flex;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--primary), var(--violet));
+  color: white;
+  font-weight: 700;
+}
+
+.flow-branches,
+.critical-paths,
+.roadmap-layout {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.flow-node button,
+.decision-card,
+.tab-row button,
+.roadmap-tabs button {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--surface-solid);
+  color: var(--text);
+  text-align: left;
+}
+
+.flow-node button {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.flow-children {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0 20px;
+}
+
+.flow-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border-left: 3px solid var(--cyan);
+  background: #f8fafc;
+}
+
+.timeline-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.semester-node {
+  min-width: 170px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--surface-solid);
+  text-align: left;
+}
+
+.semester-node.is-active,
+.decision-card.is-selected,
+.tab-row button.is-selected,
+.roadmap-tabs button.is-selected {
+  border-color: rgba(47, 91, 255, 0.45);
+  background: #e9efff;
+  color: var(--primary-strong);
+}
+
+.timeline-detail,
+.selected-track,
+.critical-chain,
+.survival-card,
+.tip-card,
+.faq-item {
+  padding: 18px;
+}
+
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chip-grid.compact {
+  gap: 6px;
+}
+
+.course-chip {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: white;
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.course-chip span {
+  color: var(--primary-strong);
+  font-weight: 700;
+}
+
+.path-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.path-line .course-chip:not(:last-child)::after {
+  content: "→";
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.mindmap {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.mindmap-center {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
+  color: white;
+  font-weight: 700;
+  text-align: center;
+}
+
+.mindmap-branches,
+.roadmap-tabs,
+.checklist-grid,
+.heatmap-grid,
+.decision-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.mindmap-branches {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.mindmap-branch,
+.check-card,
+.heat-cell,
+.selected-track {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+}
+
+.mindmap-branch {
+  padding: 16px;
+}
+
+.decision-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.progress-ring {
+  display: grid;
+  place-items: center;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 16px;
+  border: 12px solid #dbeafe;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  text-align: center;
+}
+
+.progress-ring strong {
+  font-size: 1.4rem;
+}
+
+.checklist-grid {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.check-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+}
+
+.galaxy-canvas,
+.galaxy-fallback {
+  min-height: 480px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(47, 91, 255, 0.2), transparent 30%),
+    radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.2), transparent 32%),
+    #071225;
+}
+
+.galaxy-label,
+.galaxy-core {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #0f172a;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.galaxy-core {
+  font-weight: 700;
+}
+
+.galaxy-fallback {
+  padding: 24px;
+  color: white;
+}
+
+.galaxy-fallback .course-chip {
+  color: var(--text);
+}
+
+.tab-row {
+  margin-bottom: 12px;
+}
+
+.tab-row button {
+  width: auto;
+}
+
+.heatmap-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.heat-cell {
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(47, 91, 255, calc(var(--heat) * 0.28)), rgba(6, 182, 212, calc(var(--heat) * 0.18))),
+    white;
+}
+
+.roadmap-layout {
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+
+.roadmap-tabs {
+  align-content: start;
+}
+
+.survival-timeline,
+.accordion-list,
+.tips-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.timeline-index,
+.senior-badge {
+  display: inline-flex;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #e9efff;
+  color: var(--primary-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 28px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.inline-check {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .mindmap,
+  .roadmap-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mindmap-center {
+    width: 180px;
+    justify-self: center;
+  }
+
+  .graph-card {
+    height: 440px;
+  }
+}

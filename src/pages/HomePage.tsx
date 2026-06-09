@@ -1,0 +1,454 @@
+import { Link } from 'react-router-dom';
+import { ArrowRight, Map, Route, Search, GraduationCap, ChevronRight, Network, BookOpen, Activity, AlertTriangle, Briefcase } from 'lucide-react';
+import { MotionCard } from '../components/common/MotionCard';
+import { useCourseModal } from '../components/common/CourseModalProvider';
+import { useState, useEffect } from 'react';
+import type { CourseIndex } from '../utils/courseIndex';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+
+
+
+// --- Constellation Hero ---
+function Constellation() {
+  const reducedMotion = useReducedMotion();
+  const floatAnim = (delay: number) => reducedMotion ? {} : { y: [0, -8, 0], transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const, delay } };
+  const pulseAnim = reducedMotion ? {} : { scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5], transition: { duration: 2, repeat: Infinity, ease: "easeInOut" as const } };
+
+  const lineVariants = {
+    hidden: { pathLength: 0, opacity: 0 },
+    visible: { pathLength: 1, opacity: 0.4, transition: { duration: 1.5, ease: "easeInOut" as const } }
+  };
+
+  return (
+    <div style={{ position: 'relative', width: '100%', maxWidth: '460px', height: '420px', margin: '0 auto' }}>
+      <svg width="100%" height="100%" viewBox="0 0 400 400" style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
+        {/* Connector Paths */}
+        <motion.line x1="200" y1="200" x2="320" y2="80" stroke="var(--primary)" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        <motion.line x1="200" y1="200" x2="80" y2="100" stroke="var(--cyan)" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        <motion.line x1="200" y1="200" x2="100" y2="300" stroke="var(--violet)" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        <motion.line x1="200" y1="200" x2="300" y2="320" stroke="var(--success)" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        <motion.line x1="200" y1="200" x2="350" y2="200" stroke="var(--orange)" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        <motion.line x1="200" y1="200" x2="200" y2="60" stroke="#f43f5e" strokeWidth="2" variants={lineVariants} initial="hidden" animate="visible" />
+        
+        {/* Pulsing Dots on lines */}
+        <motion.circle cx="260" cy="140" r="4" fill="var(--primary)" animate={pulseAnim} />
+        <motion.circle cx="140" cy="150" r="4" fill="var(--cyan)" animate={pulseAnim} style={{ animationDelay: '0.5s' }} />
+        <motion.circle cx="150" cy="250" r="4" fill="var(--violet)" animate={pulseAnim} style={{ animationDelay: '1s' }} />
+        <motion.circle cx="250" cy="260" r="4" fill="var(--success)" animate={pulseAnim} style={{ animationDelay: '1.5s' }} />
+      </svg>
+      
+      {/* Center Node */}
+      <motion.div animate={floatAnim(0)} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'white', padding: '16px 28px', borderRadius: '16px', boxShadow: '0 8px 32px rgba(79, 124, 255, 0.2)', border: '2px solid var(--primary)', zIndex: 2, fontWeight: 900, color: 'var(--primary)', fontSize: '1.4rem', letterSpacing: '-0.02em' }}>
+        ECPE NU
+      </motion.div>
+      
+      {/* Peripheral Nodes */}
+      <motion.div animate={floatAnim(0.5)} style={{ position: 'absolute', top: '20%', left: '80%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        Programming
+      </motion.div>
+      <motion.div animate={floatAnim(1)} style={{ position: 'absolute', top: '25%', left: '20%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        Math
+      </motion.div>
+      <motion.div animate={floatAnim(1.5)} style={{ position: 'absolute', top: '75%', left: '25%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        Hardware
+      </motion.div>
+      <motion.div animate={floatAnim(2)} style={{ position: 'absolute', top: '80%', left: '75%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        AI & Data
+      </motion.div>
+      <motion.div animate={floatAnim(0.8)} style={{ position: 'absolute', top: '50%', left: '87%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        Network
+      </motion.div>
+      <motion.div animate={floatAnim(1.2)} style={{ position: 'absolute', top: '15%', left: '50%', transform: 'translate(-50%, -50%)', background: 'white', padding: '8px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', zIndex: 1, fontWeight: 600, color: 'var(--text)', fontSize: '0.9rem' }}>
+        Career
+      </motion.div>
+    </div>
+  );
+}
+
+// --- Floating Chips ---
+function FloatingChips() {
+  const reducedMotion = useReducedMotion();
+  const floatAnim = reducedMotion ? {} : { y: [0, -5, 0], transition: { duration: 3, repeat: Infinity, ease: "easeInOut" as const, repeatType: "mirror" as const } };
+  return (
+    <>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ position: 'absolute', top: '5%', left: '5%', zIndex: 0 }}>
+        <motion.div animate={floatAnim} style={{ background: 'rgba(255,255,255,0.9)', padding: '6px 12px', borderRadius: '999px', fontSize: '0.8rem', color: 'var(--text-muted)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backdropFilter: 'blur(4px)' }}>
+          อย่าปล่อย Calc นะ 🥲
+        </motion.div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} style={{ position: 'absolute', bottom: '15%', left: '30%', zIndex: 0 }}>
+        <motion.div animate={floatAnim} style={{ animationDelay: '0.5s', background: 'rgba(255,255,255,0.9)', padding: '6px 12px', borderRadius: '999px', fontSize: '0.8rem', color: 'var(--text-muted)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backdropFilter: 'blur(4px)' }}>
+          เขียนโค้ดจริงทุกสัปดาห์ 💻
+        </motion.div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }} style={{ position: 'absolute', top: '20%', right: '5%', zIndex: 0 }}>
+        <motion.div animate={floatAnim} style={{ animationDelay: '1s', background: 'rgba(255,255,255,0.9)', padding: '6px 12px', borderRadius: '999px', fontSize: '0.8rem', color: 'var(--text-muted)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', backdropFilter: 'blur(4px)' }}>
+          เก็บ Portfolio ตั้งแต่ปี 1 ✨
+        </motion.div>
+      </motion.div>
+    </>
+  )
+}
+
+// --- Journey Strip ---
+function JourneyStrip() {
+  return (
+    <section style={{ marginBottom: '100px' }}>
+      <div style={{ position: 'relative', maxWidth: '800px', margin: '0 auto', padding: '40px 0' }}>
+        <svg width="100%" height="4px" style={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)', zIndex: 0 }}>
+          <line x1="10%" y1="2" x2="90%" y2="2" stroke="var(--border)" strokeWidth="3" strokeDasharray="6 6" />
+          <motion.line x1="10%" y1="2" x2="90%" y2="2" stroke="var(--primary)" strokeWidth="3" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true, amount: 0.8 }} transition={{ duration: 1.5, ease: "easeInOut" as const }} />
+        </svg>
+        <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1, padding: '0 5%' }}>
+          {[
+            { year: 'Year 1', desc: 'ปูพื้นฐาน' },
+            { year: 'Year 2', desc: 'วิชาหนักเริ่มมา' },
+            { year: 'Year 3', desc: 'เริ่มเลือกทาง' },
+            { year: 'Year 4', desc: 'โปรเจกต์/ฝึกงาน' }
+          ].map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.8 }} transition={{ delay: i * 0.3, duration: 0.5 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', background: 'white', padding: '12px 20px', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 8px 24px rgba(79,124,255,0.08)' }}>
+               <div style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '1.2rem' }}>{item.year}</div>
+               <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 500 }}>{item.desc}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function HomePage({ courseIndex }: { courseIndex: CourseIndex }) {
+  const { openCourse } = useCourseModal();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  
+  // Search Placeholders
+  const placeholders = ["305121", "แคลคูลัส", "Machine Learning", "Digital Logic"];
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    const results = courseIndex.searchCourses(searchQuery, 1);
+    if (results.length > 0) {
+      openCourse(results[0].course);
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
+  };
+
+  return (
+    <div className="page" style={{ padding: '0 24px 64px', maxWidth: '1200px', margin: '0 auto', overflowX: 'hidden' }}>
+      
+      {/* 1. Hero Section */}
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '48px', alignItems: 'center', minHeight: '70vh', marginBottom: '64px', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: '10%', left: '30%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(79, 124, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(40px)', zIndex: -1 }}></div>
+        <div style={{ position: 'absolute', top: '40%', right: '10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(123, 97, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(30px)', zIndex: -1 }}></div>
+
+        <FloatingChips />
+
+        <div style={{ paddingRight: '24px', zIndex: 1 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.2rem)', fontWeight: 800, lineHeight: 1.05, marginBottom: '20px', color: 'var(--text)', letterSpacing: '-0.03em' }}>
+              <span className="text-gradient">ECPE NU</span><br/>
+              Freshman<br/>Handbook
+            </h1>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: 'var(--text-muted)', marginBottom: '28px', maxWidth: '480px' }}>
+              คู่มือเอาตัวรอดวิศวกรรมคอมพิวเตอร์แบบ <span className="text-gradient-cyan" style={{fontWeight: 700}}>Interactive</span> 
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '40px', maxWidth: '520px' }}>
+              นี่ไม่ใช่คู่มือวิชาการน่าเบื่อ! แต่เป็นแผนที่พาน้องๆ ตะลุย 4 ปีในมหาลัย ให้เห็นภาพรวมว่าต้องเจอวิชาอะไร วางแผนเทอมไหน และเลือกสายอาชีพที่ใช่
+            </p>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <motion.div whileHover="hover" whileTap={{ scale: 0.95 }} style={{ display: 'inline-block' }}>
+                <Link to="/visual-maps" className="primary-button" style={{ textDecoration: 'none', fontSize: '1.1rem', padding: '14px 32px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 24px rgba(79, 124, 255, 0.3)' }}>
+                  <motion.div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%)', transform: 'translateX(-100%)' }} variants={{ hover: { transform: 'translateX(100%)', transition: { duration: 0.8, ease: "easeInOut" as const } } }} />
+                  เริ่มสำรวจแผน 4 ปี 
+                  <motion.div variants={{ hover: { x: 4 } }} transition={{ type: "spring", stiffness: 300 }}><ArrowRight size={18} /></motion.div>
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.02, backgroundColor: 'rgba(0,0,0,0.05)' }} whileTap={{ scale: 0.95 }} style={{ display: 'inline-block', borderRadius: '999px' }}>
+                <Link to="/courses" className="secondary-button" style={{ textDecoration: 'none', fontSize: '1.1rem', padding: '14px 32px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Search size={18} /> หาวิชาเรียน
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+        
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+          <Constellation />
+        </div>
+      </section>
+
+      {/* 2. Journey Strip */}
+      <JourneyStrip />
+
+      {/* 3. Onboarding Flow */}
+      <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} style={{ marginBottom: '100px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <div style={{ display: 'inline-block', padding: '6px 16px', background: 'rgba(123, 97, 255, 0.1)', color: 'var(--violet)', borderRadius: '999px', fontWeight: 700, fontSize: '0.85rem', marginBottom: '16px' }}>GETTING STARTED</div>
+          <h2 style={{ fontSize: '2.4rem', margin: '0 0 16px 0', letterSpacing: '-0.02em' }}>ควรเริ่มอ่านตรงไหน?</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.15rem' }}>4 ขั้นตอนทำความเข้าใจหลักสูตร ฉบับรวบรัด</p>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
+          {[
+            { step: 1, title: 'ดูภาพรวม 4 ปี', desc: 'เห็นภาพรวมว่าแต่ละเทอมต้องเรียนอะไรบ้าง', icon: Map, link: '/visual-maps', color: 'var(--primary)', bg: 'rgba(79, 124, 255, 0.1)' },
+            { step: 2, title: 'เช็กวิชาตัวต่อ', desc: 'วางแผนไม่ให้ติดแหงกกับวิชา prerequisite', icon: Network, link: '/dependency-graph', color: 'var(--violet)', bg: 'rgba(123, 97, 255, 0.1)' },
+            { step: 3, title: 'เลือกสายที่อยากลอง', desc: 'ค้นหาแนวทางอาชีพที่ใช่จาก 6 สายหลัก', icon: Route, link: '/roadmaps', color: 'var(--success)', bg: 'rgba(78, 230, 178, 0.15)' },
+            { step: 4, title: 'ตรวจเงื่อนไขก่อนจบ', desc: 'เตรียมตัวให้พร้อมสำหรับการฝึกงานและโปรเจกต์', icon: GraduationCap, link: '/survival-guide', color: 'var(--orange)', bg: 'rgba(255, 158, 87, 0.15)' },
+          ].map((item, i) => (
+            <motion.div variants={itemVariants} key={i} whileHover={{ y: -5, boxShadow: `0 12px 24px ${item.bg}` }}>
+              <Link to={item.link} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
+                <MotionCard style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', borderTop: `4px solid ${item.color}` }}>
+                  <div style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '4rem', fontWeight: 900, color: item.bg, lineHeight: 1, zIndex: 0 }}>0{item.step}</div>
+                  <div style={{ position: 'relative', zIndex: 1, flexGrow: 1, paddingTop: '16px' }}>
+                    <div style={{ width: '56px', height: '56px', borderRadius: '18px', background: item.bg, display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px', color: item.color }}>
+                      <item.icon size={28} />
+                    </div>
+                    <h3 style={{ margin: '0 0 12px 0', fontSize: '1.3rem', fontWeight: 700 }}>{item.title}</h3>
+                    <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6 }}>{item.desc}</p>
+                  </div>
+                  <div style={{ position: 'relative', zIndex: 1, marginTop: '32px', display: 'flex', alignItems: 'center', gap: '6px', color: item.color, fontWeight: 700, fontSize: '0.95rem' }}>
+                    สำรวจเลย <ChevronRight size={18} />
+                  </div>
+                </MotionCard>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* 4. Data Visualization Cards */}
+      <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} style={{ marginBottom: '100px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <h2 style={{ fontSize: '2.4rem', margin: '0 0 16px 0' }}>ข้อมูลเชิงลึก <span className="text-gradient">หลักสูตร</span></h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.15rem' }}>สถิติและข้อมูลที่ช่วยให้คุณวางแผนการเรียนได้ดีขึ้น</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+          
+          {/* A. Credit Breakdown */}
+          <motion.div variants={itemVariants}>
+            <MotionCard style={{ height: '100%', padding: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(238, 242, 255, 0.8))' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)', fontWeight: 700 }}><BookOpen size={20}/> สัดส่วนหน่วยกิต</div>
+              <div style={{ position: 'relative', width: '140px', height: '140px' }}>
+                <svg viewBox="0 0 36 36" width="100%" height="100%" style={{ transform: 'rotate(-90deg)' }}>
+                  <motion.circle stroke="var(--cyan)" strokeWidth="4" fill="none" strokeDasharray="21.7 100" cx="18" cy="18" r="16" initial={{ strokeDasharray: "0 100" }} whileInView={{ strokeDasharray: "21.7 100" }} transition={{ duration: 1 }} />
+                  <motion.circle stroke="var(--primary)" strokeWidth="4" fill="none" strokeDasharray="73.9 100" strokeDashoffset="-21.7" cx="18" cy="18" r="16" initial={{ strokeDasharray: "0 100" }} whileInView={{ strokeDasharray: "73.9 100" }} transition={{ duration: 1, delay: 0.5 }} />
+                  <motion.circle stroke="var(--warning)" strokeWidth="4" fill="none" strokeDasharray="4.3 100" strokeDashoffset="-95.6" cx="18" cy="18" r="16" initial={{ strokeDasharray: "0 100" }} whileInView={{ strokeDasharray: "4.3 100" }} transition={{ duration: 1, delay: 1 }} />
+                </svg>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 800, fontSize: '1.4rem' }}>138</div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--cyan)' }}></div> ศึกษาทั่วไป (30)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)' }}></div> วิชาเฉพาะ (102)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--warning)' }}></div> เลือกเสรี (6)</span>
+              </div>
+            </MotionCard>
+          </motion.div>
+
+          {/* B. Study Load Trend */}
+          <motion.div variants={itemVariants}>
+            <MotionCard style={{ height: '100%', padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px', background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(243, 232, 255, 0.8))' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--violet)', fontWeight: 700 }}><Activity size={20}/> ความเข้มข้นของเนื้อหา</div>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                <svg viewBox="0 0 100 50" width="100%" height="80px" style={{ overflow: 'visible' }}>
+                  <motion.path d="M0,45 L25,35 L50,15 L75,10 L100,25 L100,50 L0,50 Z" fill="rgba(123, 97, 255, 0.15)" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }} />
+                  <motion.path d="M0,45 L25,35 L50,15 L75,10 L100,25" fill="none" stroke="var(--violet)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, ease: "easeInOut" as const }} />
+                  <circle cx="25" cy="35" r="3" fill="var(--violet)" />
+                  <circle cx="50" cy="15" r="3" fill="var(--violet)" />
+                  <circle cx="75" cy="10" r="3" fill="var(--violet)" />
+                  <circle cx="100" cy="25" r="3" fill="var(--violet)" />
+                </svg>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                <span>ปี 1</span><span>ปี 2</span><span>ปี 3</span><span>ปี 4</span>
+              </div>
+            </MotionCard>
+          </motion.div>
+
+          {/* C. Career Radar / Bars */}
+          <motion.div variants={itemVariants}>
+            <MotionCard style={{ height: '100%', padding: '32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--success)', fontWeight: 700 }}><Briefcase size={20}/> ทักษะที่ใช้บ่อยในสายงาน</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'center' }}>
+                {[
+                  { label: 'Software Eng.', val: '90%', color: 'var(--primary)' },
+                  { label: 'AI/Data', val: '80%', color: 'var(--cyan)' },
+                  { label: 'Hardware', val: '75%', color: 'var(--violet)' },
+                  { label: 'Network', val: '65%', color: 'var(--orange)' },
+                ].map((skill, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ width: '80px', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>{skill.label}</span>
+                    <div style={{ flex: 1, background: 'var(--surface-muted)', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+                      <motion.div initial={{ width: 0 }} whileInView={{ width: skill.val }} transition={{ duration: 1, delay: i * 0.2, ease: "easeOut" as const }} style={{ height: '100%', background: skill.color, borderRadius: '4px' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </MotionCard>
+          </motion.div>
+
+          {/* D. Risk Courses */}
+          <motion.div variants={itemVariants}>
+            <MotionCard style={{ height: '100%', padding: '32px', display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '4px solid #f43f5e' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f43f5e', fontWeight: 700 }}><AlertTriangle size={20}/> วิชาปราบเซียน (ต้องระวัง)</div>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>วิชาที่สถิติการดรอป/F สูง ควรให้เวลาอ่านหนังสือมากเป็นพิเศษ</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: 'auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(244, 63, 94, 0.1)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, color: '#f43f5e' }}>
+                  <span>Calculus 1-3</span>
+                  <span style={{ display: 'flex', gap: '2px' }}>•••</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(249, 115, 22, 0.1)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, color: '#ea580c' }}>
+                  <span>Physics 1-2</span>
+                  <span style={{ display: 'flex', gap: '2px' }}>••</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(123, 97, 255, 0.1)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, color: 'var(--violet)' }}>
+                  <span>Data Struct & Algo</span>
+                  <span style={{ display: 'flex', gap: '2px' }}>•••</span>
+                </div>
+              </div>
+            </MotionCard>
+          </motion.div>
+
+        </div>
+      </motion.section>
+
+      {/* 5. Mini Prerequisite Preview */}
+      <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} style={{ marginBottom: '100px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <h2 style={{ fontSize: '2.4rem', margin: '0 0 16px 0' }}>วิชาตัวต่อ <span className="text-gradient-violet">ที่ควรรู้</span></h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.15rem' }}>ตัวอย่างสายวิชาต่อเนื่องที่ต้องวางแผนให้ดี เพราะถ้าตก 1 ตัว จะเรียนตัวถัดไปไม่ได้</p>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          
+          <motion.div variants={itemVariants} whileHover="hover" initial="initial">
+            <MotionCard style={{ padding: '32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ marginBottom: '24px', fontWeight: 700, color: 'var(--text-muted)' }}>สายคณิตศาสตร์</div>
+              <svg width="100%" height="40px" style={{ position: 'absolute', top: '55%', left: 0, zIndex: 0 }}>
+                <motion.line x1="20%" y1="20" x2="50%" y2="20" stroke="var(--cyan)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5 }} />
+                <motion.line x1="50%" y1="20" x2="80%" y2="20" stroke="var(--cyan)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5, delay: 0.3 }} />
+              </svg>
+              <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Calc 1</div>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Calc 2</div>
+                <div style={{ padding: '8px 16px', background: 'rgba(6, 182, 212, 0.1)', border: '1px solid var(--cyan)', color: 'var(--cyan)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Calc 3</div>
+              </div>
+            </MotionCard>
+          </motion.div>
+
+          <motion.div variants={itemVariants} whileHover="hover" initial="initial">
+            <MotionCard style={{ padding: '32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ marginBottom: '24px', fontWeight: 700, color: 'var(--text-muted)' }}>สายโปรแกรมมิ่ง</div>
+              <svg width="100%" height="40px" style={{ position: 'absolute', top: '55%', left: 0, zIndex: 0 }}>
+                <motion.line x1="20%" y1="20" x2="50%" y2="20" stroke="var(--primary)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5 }} />
+                <motion.line x1="50%" y1="20" x2="80%" y2="20" stroke="var(--primary)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5, delay: 0.3 }} />
+              </svg>
+              <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Prog 1</div>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Prog 2</div>
+                <div style={{ padding: '8px 16px', background: 'rgba(79, 124, 255, 0.1)', border: '1px solid var(--primary)', color: 'var(--primary)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Data Struct</div>
+              </div>
+            </MotionCard>
+          </motion.div>
+
+          <motion.div variants={itemVariants} whileHover="hover" initial="initial">
+            <MotionCard style={{ padding: '32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ marginBottom: '24px', fontWeight: 700, color: 'var(--text-muted)' }}>สายฮาร์ดแวร์</div>
+              <svg width="100%" height="40px" style={{ position: 'absolute', top: '55%', left: 0, zIndex: 0 }}>
+                <motion.line x1="20%" y1="20" x2="50%" y2="20" stroke="var(--violet)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5 }} />
+                <motion.line x1="50%" y1="20" x2="80%" y2="20" stroke="var(--violet)" strokeWidth="2" strokeDasharray="4 4" variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }} transition={{ duration: 0.5, delay: 0.3 }} />
+              </svg>
+              <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Logic</div>
+                <div style={{ padding: '8px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Embed 1</div>
+                <div style={{ padding: '8px 16px', background: 'rgba(123, 97, 255, 0.1)', border: '1px solid var(--violet)', color: 'var(--violet)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}>Embed 2</div>
+              </div>
+            </MotionCard>
+          </motion.div>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+           <Link to="/dependency-graph" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--violet)', fontWeight: 700, textDecoration: 'none' }}>ดูแผนภาพวิชาตัวต่อทั้งหมด <ArrowRight size={16} /></Link>
+        </div>
+      </motion.section>
+
+      {/* 6. Course Search Section */}
+      <motion.section variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <MotionCard style={{ padding: '64px 40px', textAlign: 'center', background: 'linear-gradient(135deg, var(--primary), var(--violet))', color: 'white', border: 'none', boxShadow: '0 20px 40px rgba(123, 97, 255, 0.2)' }}>
+          <h2 style={{ fontSize: '2.5rem', margin: '0 0 16px 0', color: 'white', fontWeight: 800 }}>ค้นหารายวิชา</h2>
+          <p style={{ fontSize: '1.15rem', margin: '0 auto 40px auto', maxWidth: '600px', opacity: 0.9, lineHeight: 1.6 }}>
+            พิมพ์รหัสวิชา หรือคีย์เวิร์ดที่สนใจ เช่น แคลคูลัส, Database, 305121
+          </p>
+          <form onSubmit={handleSearch} style={{ maxWidth: '680px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <div style={{ position: 'relative', flexGrow: 1, minWidth: '300px' }}>
+                <Search style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', color: isSearchFocused ? 'var(--primary)' : 'var(--text-muted)', zIndex: 1, transition: 'color 0.3s' }} size={24} />
+                
+                <AnimatePresence mode="wait">
+                  {!searchQuery && !isSearchFocused && (
+                    <motion.div 
+                      key={placeholderIdx}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ position: 'absolute', left: '60px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '1.15rem', pointerEvents: 'none' }}
+                    >
+                      ค้นหา "{placeholders[placeholderIdx]}"...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  style={{ width: '100%', padding: '20px 20px 20px 60px', fontSize: '1.15rem', borderRadius: '999px', border: isSearchFocused ? '2px solid var(--primary)' : '2px solid transparent', outline: 'none', boxShadow: isSearchFocused ? '0 0 0 4px rgba(79, 124, 255, 0.2)' : '0 8px 30px rgba(0,0,0,0.15)', color: 'var(--text)', background: 'white', transition: 'all 0.3s' }} 
+                />
+              </div>
+              <motion.button whileHover={{ scale: 1.05, boxShadow: '0 12px 40px rgba(0,0,0,0.2)' }} whileTap={{ scale: 0.95 }} type="submit" style={{ padding: '16px 40px', borderRadius: '999px', border: 'none', background: 'var(--text)', color: 'white', fontSize: '1.15rem', fontWeight: 700, cursor: 'pointer', transition: 'box-shadow 0.3s' }}>
+                ค้นหาเลย
+              </motion.button>
+            </div>
+            
+            {/* Suggestion Chips */}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '8px' }}>
+              {['ปี 1', 'วิชาเลือก', 'AI', 'Network'].map((chip) => (
+                <button 
+                  key={chip} 
+                  type="button"
+                  onClick={() => setSearchQuery(chip)}
+                  style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', padding: '6px 16px', borderRadius: '999px', fontSize: '0.9rem', cursor: 'pointer', transition: 'background 0.2s' }}
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          </form>
+        </MotionCard>
+      </motion.section>
+
+    </div>
+  );
+}

@@ -1,0 +1,25 @@
+:root {
+  --font-sans: "Prompt", "Segoe UI", system-ui, sans-serif;
+  --bg: #F3F6FF;
+  --bg-strong: #E9EEFA;
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-solid: #ffffff;
+  --surface-muted: rgba(255, 255, 255, 0.5);
+  --text: #15213A;
+  --text-muted: #5E6B85;
+  --border: rgba(110, 130, 255, 0.12);
+  --primary: #4F7CFF;
+  --primary-strong: #3B5FDB;
+  --cyan: #35C9FF;
+  --violet: #7B61FF;
+  --pink: #FF6FD8;
+  --danger: #FF5A79;
+  --warning: #FF9E57;
+  --success: #4EE6B2;
+  --shadow-sm: 0 4px 16px rgba(47, 91, 255, 0.04);
+  --shadow: 0 10px 30px rgba(47, 91, 255, 0.08);
+  --shadow-hover: 0 20px 40px rgba(47, 91, 255, 0.14), 0 0 0 2px rgba(123, 97, 255, 0.2) inset;
+  --radius: 22px;
+  --radius-lg: 28px;
+  --sidebar-width: 260px;
+}
