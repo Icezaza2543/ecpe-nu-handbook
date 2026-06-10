@@ -6,8 +6,8 @@ export function CreditsPage() {
     <div className="page" style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
       <SectionHeader 
         title="Credits & About" 
-        description="ข้อมูลเกี่ยวกับผู้จัดทำและแหล่งที่มาของข้อมูลในเว็บนี้" 
-        bgImage="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1200&q=80"
+        description="ข้อมูลเกี่ยวกับผู้จัดทำ และที่มาของ ECPE NU Freshman Handbook"
+        variant="hero"
       />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>

@@ -49,7 +49,7 @@ export function SurvivalGuidePage({ courseIndex }: { courseIndex: CourseIndex })
       <SectionHeader 
         title="คู่มือเอาตัวรอด" 
         description="Timeline สิ่งที่ต้องทำในแต่ละช่วงเวลา เตรียมตัวล่วงหน้า พร้อม checklist ส่วนตัวของคุณ" 
-        bgImage="https://images.unsplash.com/photo-1512758266936-397a61d1ea02?auto=format&fit=crop&w=1200&q=80"
+        variant="hero"
       />
       <div className="survival-timeline" style={{ display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative', paddingLeft: '24px' }}>
         {/* Vertical line for timeline */}

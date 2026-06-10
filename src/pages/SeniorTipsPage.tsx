@@ -44,8 +44,8 @@ export function SeniorTipsPage({ courseIndex }: { courseIndex: CourseIndex }) {
     <div className="page" style={{ paddingBottom: '100px' }}>
       <SectionHeader 
         title="คำแนะนำจากรุ่นพี่" 
-        description="Insight ลับ และคำแนะนำจากรุ่นพี่ที่ผ่านสมรภูมิมาก่อน" 
-        bgImage="https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1200&q=80"
+        description="รวมทริคการเรียน การใช้ชีวิต และการเตรียมตัวทำงานจากรุ่นพี่ที่จบไปแล้ว"
+        variant="hero"
       />
       <SearchBox value={query} onChange={setQuery} placeholder="ค้นหา tips เช่น portfolio, ฝึกงาน, โปรเจกต์..." />
       <div className="tips-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>

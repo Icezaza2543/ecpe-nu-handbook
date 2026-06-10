@@ -20,7 +20,7 @@ if (import.meta.env.DEV) {
 }
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/ecpe-nu-handbook">
       <App />
     </BrowserRouter>
   </StrictMode>,

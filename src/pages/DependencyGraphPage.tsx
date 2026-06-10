@@ -5,7 +5,8 @@ import { OfficialPrerequisiteGraph } from '../components/visuals/OfficialPrerequ
 
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { VisualFallback } from '../components/common/VisualFallback';
-import { AlertTriangle, Map, Crosshair } from 'lucide-react';
+import { SectionHeader } from '../components/common/SectionHeader';
+import { Map, Crosshair } from 'lucide-react';
 import { officialPrerequisites } from '../data/officialPrerequisites';
 import { dependencies } from '../data/dependencies';
 
@@ -19,37 +20,12 @@ export function DependencyGraphPage({ courseIndex }: { courseIndex: CourseIndex 
   return (
     <div className="page" style={{ paddingBottom: '100px' }}>
       
-      {/* 1. Hero / Warning Header */}
-      <div style={{ background: 'var(--surface)', borderRadius: '32px', padding: '40px', marginBottom: '32px', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-50px', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%)', filter: 'blur(40px)' }}></div>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', margin: '0 0 16px 0', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-            วิชาตัวต่อและเส้นทางที่ควรระวัง
-          </h1>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', lineHeight: '1.6', margin: '0 0 32px 0', maxWidth: '800px' }}>
-            แผนภาพแสดงเงื่อนไขวิชาบังคับก่อนตาม มคอ.2 และเส้นทางวิกฤตที่อาจทำให้แผนการเรียนรวนหากสอบไม่ผ่าน
-          </p>
-
-          <div style={{ background: '#fff1f2', border: '1px solid #fda4af', padding: '24px', borderRadius: '24px', display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '32px' }}>
-            <AlertTriangle size={32} color="#e11d48" style={{ flexShrink: 0 }} />
-            <span style={{ color: '#be123c', fontSize: '1.3rem', fontWeight: 700 }}>
-              "วิชาที่ยากไม่น่ากลัวเท่าวิชาที่มีตัวต่อ"
-            </span>
-          </div>
-
-          {/* Mini Stat Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>{officialEdgesCount}</div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Official Prerequisite Edges</div>
-            </div>
-            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--danger)' }}>{criticalPathsCount}</div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Critical Paths</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 1. Section Header — same style as other pages */}
+      <SectionHeader
+        title="วิชาตัวต่อ"
+        description={`แผนภาพแสดงเงื่อนไขวิชาบังคับก่อนตาม มคอ.2 และเส้นทางวิกฤตที่อาจทำให้แผนการเรียนรวนหากสอบไม่ผ่าน · ${officialEdgesCount} คู่วิชาบังคับก่อน · ${criticalPathsCount} เส้นทางวิกฤต`}
+        variant="hero"
+      />
 
       {/* 2. Mode Switcher */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>

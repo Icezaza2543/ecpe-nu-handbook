@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppLayout } from './components/layout/AppLayout';
 import { CourseModalProvider } from './components/common/CourseModalProvider';
 import { useCourseIndex } from './hooks/useCourseIndex';
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <CourseModalProvider courseIndex={courseIndex}>
       <Suspense fallback={<div className="route-loading">Loading ECPE Handbook...</div>}>
+        <ScrollToTop />
         <Routes>
           <Route element={<AppLayout courseIndex={courseIndex} />}>
             <Route index element={<HomePage courseIndex={courseIndex} />} />

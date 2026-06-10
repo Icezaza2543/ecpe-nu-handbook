@@ -155,9 +155,9 @@ export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }
       `}</style>
 
       <SectionHeader 
-        title="คลาสอาชีพ" 
-        description="เลือกสายที่ชอบ วางแผน skill tree ให้พร้อมลุยตลาดงานจริง" 
-        bgImage="https://images.unsplash.com/photo-1507238691740-14c015b63cf5?auto=format&fit=crop&w=1200&q=80"
+        title="Roadmap สายอาชีพ" 
+        description="เจาะลึก 6 สายงานหลักในวงการวิศวกรรมคอมพิวเตอร์ พร้อมวิชาแนะนำในหลักสูตรที่ควรลงเรียน"
+        variant="hero"
       />
 
       <div className="career-layout">
@@ -165,7 +165,7 @@ export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }
         {/* 1. Class Selection Area */}
         <aside>
           <div style={{ position: 'sticky', top: '24px' }}>
-            <div style={{ marginBottom: '16px', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>SELECT YOUR CLASS</div>
+            <div style={{ marginBottom: '16px', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>เลือกสายที่สนใจ</div>
             <div className="class-card-grid">
               {items.map((item) => {
                 const isSelected = active?.id === item.id;
@@ -299,7 +299,7 @@ export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }
                             </div>
                             {yp.courses && yp.courses.length > 0 ? (
                               <div>
-                                 <strong style={{ color: 'var(--text)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nodes (Courses)</strong>
+                                 <strong style={{ color: 'var(--text)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>วิชาที่เกี่ยวข้อง</strong>
                                  <div className="chip-grid compact" style={{ marginTop: '8px' }}>
                                    {yp.courses.map((c: string, j: number) => <CourseChip key={j} course={courseIndex.findCourse(c)} courseRef={c} />)}
                                  </div>

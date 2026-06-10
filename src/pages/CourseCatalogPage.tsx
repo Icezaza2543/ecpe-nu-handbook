@@ -20,6 +20,7 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
   const [career, setCareer] = useState('all');
   const [dangerOnly, setDangerOnly] = useState(false);
   const [sort, setSort] = useState<SortMode>('code');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(window.innerWidth > 768 ? 'list' : 'grid');
   const debouncedQuery = useDebouncedValue(query);
   const { openCourse } = useCourseModal();
   const careerOptions = Array.from(new Set(courseIndex.courses.flatMap((course) => course.careerPaths || []))).sort();
@@ -67,9 +68,9 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
   return (
     <div className="page">
       <SectionHeader 
-        title="Course Catalog" 
-        description="รายวิชาทั้งหมด ค้นหา กรอง และดูข้อมูลเชิงลึกได้ทันที" 
-        bgImage="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"
+        title="รายวิชาทั้งหมด" 
+        description="ค้นหา ดูรายละเอียด และตรวจสอบความเชื่อมโยงของทุกรายวิชาในหลักสูตรวิศวกรรมคอมพิวเตอร์"
+        variant="hero"
       />
       <div className="catalog-stats" style={{ gap: '12px' }}>
         {Object.entries(stats).map(([label, value]) => {
@@ -116,16 +117,38 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
           <option value="name">เรียงตามชื่อ</option>
         </select>
         <label className="inline-check"><input type="checkbox" checked={dangerOnly} onChange={(event) => setDangerOnly(event.target.checked)} /> ห้ามติด F</label>
+        <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
+          <button onClick={() => setViewMode('list')} style={{ padding: '8px', background: viewMode === 'list' ? 'var(--primary)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--text-muted)', border: '1px solid', borderColor: viewMode === 'list' ? 'var(--primary)' : 'var(--border)', borderRadius: '8px', cursor: 'pointer' }}>List</button>
+          <button onClick={() => setViewMode('grid')} style={{ padding: '8px', background: viewMode === 'grid' ? 'var(--primary)' : 'transparent', color: viewMode === 'grid' ? 'white' : 'var(--text-muted)', border: '1px solid', borderColor: viewMode === 'grid' ? 'var(--primary)' : 'var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Grid</button>
+        </div>
       </div>
       {filtered.length === 0 ? <EmptyState title="ไม่พบรายวิชา" /> : null}
-    <div className="course-card-grid">
+      
+      <div className={viewMode === 'grid' ? "course-card-grid" : "course-list"} style={viewMode === 'list' ? { display: 'flex', flexDirection: 'column', gap: '12px' } : undefined}>
         {filtered.map((course: Course) => {
           let bg = 'var(--surface)';
           let border = 'var(--border)';
-          if (course.type === 'general-education') { bg = 'rgba(139, 92, 246, 0.12)'; border = 'rgba(139, 92, 246, 0.3)'; }
-          else if (course.type === 'required') { bg = 'rgba(6, 182, 212, 0.12)'; border = 'rgba(6, 182, 212, 0.3)'; }
-          else if (course.type === 'major-elective') { bg = 'rgba(245, 158, 11, 0.12)'; border = 'rgba(245, 158, 11, 0.3)'; }
-          else if (course.type === 'free-elective') { bg = 'rgba(236, 72, 153, 0.12)'; border = 'rgba(236, 72, 153, 0.3)'; }
+          if (course.type === 'general-education') { bg = 'rgba(139, 92, 246, 0.05)'; border = 'rgba(139, 92, 246, 0.3)'; }
+          else if (course.type === 'required') { bg = 'rgba(6, 182, 212, 0.05)'; border = 'rgba(6, 182, 212, 0.3)'; }
+          else if (course.type === 'major-elective') { bg = 'rgba(245, 158, 11, 0.05)'; border = 'rgba(245, 158, 11, 0.3)'; }
+          else if (course.type === 'free-elective') { bg = 'rgba(236, 72, 153, 0.05)'; border = 'rgba(236, 72, 153, 0.3)'; }
+
+          if (viewMode === 'list') {
+            return (
+              <button type="button" className="course-list-item" key={course.id} onClick={() => openCourse(course)} style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', background: bg, border: `1px solid ${border}`, borderRadius: '12px', padding: '16px', textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(4px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(0)'}>
+                <span className="course-code" style={{ padding: '6px 12px', background: 'rgba(79, 124, 255, 0.1)', color: 'var(--primary-strong)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700, minWidth: '85px', textAlign: 'center' }}>{course.code || 'TBD'}</span>
+                <div style={{ flexGrow: 1 }}>
+                  <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--text)' }}>{course.nameTh || course.nameEn}</h3>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{course.nameTh ? course.nameEn : ''}</p>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <Badge tone="soft">{course.credits || 'TBD'} Cr.</Badge>
+                  {course.dangerousToFail ? <Badge tone="danger">ห้ามพลาด</Badge> : null}
+                  <SourceBadge course={course} />
+                </div>
+              </button>
+            );
+          }
 
           return (
             <button type="button" className="course-card" key={course.id} onClick={() => openCourse(course)} style={{ display: 'flex', flexDirection: 'column', height: '100%', background: bg, backdropFilter: 'blur(12px)', border: `1px solid ${border}`, borderRadius: '20px', padding: '20px' }}>

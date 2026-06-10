@@ -14,12 +14,32 @@
   --violet: #7B61FF;
   --pink: #FF6FD8;
   --danger: #FF5A79;
+  --orange: #FF9E57;
   --warning: #FF9E57;
   --success: #4EE6B2;
+
+  /* Spacing scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Shadows */
   --shadow-sm: 0 4px 16px rgba(47, 91, 255, 0.04);
   --shadow: 0 10px 30px rgba(47, 91, 255, 0.08);
   --shadow-hover: 0 20px 40px rgba(47, 91, 255, 0.14), 0 0 0 2px rgba(123, 97, 255, 0.2) inset;
+
+  /* Radii */
   --radius: 22px;
   --radius-lg: 28px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Layout */
   --sidebar-width: 260px;
 }

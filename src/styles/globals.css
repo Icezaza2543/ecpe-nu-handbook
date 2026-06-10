@@ -33,6 +33,12 @@ body.is-modal-open {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.text-gradient-violet {
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 button,
 input,
@@ -42,10 +48,24 @@ select {
 
 button {
   cursor: pointer;
+  transition: color var(--transition-normal), background-color var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 a {
   color: inherit;
+  transition: color var(--transition-fast);
+}
+
+::selection {
+  background: rgba(79, 124, 255, 0.2);
+  color: var(--text);
 }
 
 h1,
@@ -56,8 +76,8 @@ p {
 }
 
 h1, h2, h3 {
-  font-weight: 600;
-  color: #1a1e26;
+  font-weight: 700;
+  color: var(--text);
 }
 
 h1 {

@@ -56,6 +56,7 @@
   padding: 11px 12px;
   color: var(--text-muted);
   text-decoration: none;
+  transition: background var(--transition-normal), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .sidebar a.active,
@@ -446,29 +447,62 @@ main {
   inset: 0;
   z-index: 60;
   display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(15, 23, 42, 0.55);
+  align-items: flex-end; /* Mobile default: bottom sheet */
+  padding: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+@media (min-width: 768px) {
+  .modal-backdrop {
+    justify-content: flex-end; /* Desktop: right side drawer */
+    align-items: stretch;
+  }
 }
 
 .course-modal {
   position: relative;
-  width: min(920px, 100%);
-  max-height: min(820px, 92svh);
+  width: 100%;
+  max-height: 90vh;
   overflow: auto;
-  border-radius: var(--radius-lg);
+  border-radius: 24px 24px 0 0;
   background: var(--surface-solid);
-  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.28);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 768px) {
+  .course-modal {
+    width: min(560px, 100%);
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 24px 0 0 24px;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+    animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 .modal-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 40px;
-  height: 40px;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
   justify-content: center;
-  background: #f1f5f9;
+  background: var(--surface-muted);
+  border-radius: 50%;
+  color: var(--text-muted);
 }
 
 .course-modal__header {
@@ -542,32 +576,179 @@ main {
 
   .stats-grid,
   .catalog-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .catalog-toolbar {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .mobile-nav {
     position: fixed;
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: 40;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    padding: 6px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: var(--shadow);
+    grid-template-columns: repeat(5, 1fr);
+    padding: 6px 8px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
   }
 
-  .mobile-nav a {
+  .mobile-nav a,
+  .mobile-nav button.more-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    padding: 9px 6px;
-    font-size: 0.82rem;
+    gap: 4px;
+    padding: 8px 4px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .mobile-nav a.active,
+  .mobile-nav button.more-button.active {
+    color: var(--primary-strong);
+    font-weight: 700;
+  }
+
+  /* Bottom Sheet */
+  .mobile-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 45;
+    animation: fadeIn 0.3s ease forwards;
+    backdrop-filter: blur(4px);
+  }
+
+  .mobile-nav-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    z-index: 50;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 24px 20px 40px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-nav-sheet.open {
+    transform: translateY(0);
+  }
+
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sheet-header .close-button {
+    background: var(--surface-muted);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+  }
+
+  .sheet-content {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 4px;
+  }
+
+  .sheet-group {
+    margin-bottom: 24px;
+  }
+
+  .sheet-group-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .sheet-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sheet-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    background: var(--surface-muted);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+  }
+
+  .sheet-link.active {
+    background: rgba(79, 124, 255, 0.08);
+    border-color: rgba(79, 124, 255, 0.2);
+    color: var(--primary-strong);
+    font-weight: 700;
+  }
+
+  .sheet-link.active .sheet-icon-wrapper {
+    background: var(--primary);
+    color: white;
+  }
+
+  .sheet-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .sheet-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
