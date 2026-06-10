@@ -5,7 +5,7 @@ const navGroups = [
   {
     label: 'EXPLORE',
     items: [
-      { path: '/', label: 'Mission Control', icon: Home },
+      { path: '/', label: 'หน้าแรก', icon: Home },
     ]
   },
   {
@@ -35,7 +35,6 @@ export function Sidebar() {
         <span style={{ background: 'linear-gradient(135deg, var(--primary), var(--violet))', boxShadow: '0 4px 12px rgba(123, 97, 255, 0.3)' }}>EC</span>
         <div>
           <strong style={{ fontSize: '1.1rem', color: 'var(--text)' }}>ECPE NU</strong>
-          <small style={{ color: 'var(--primary-strong)', fontWeight: 600 }}>Curriculum OS</small>
         </div>
       </div>
       

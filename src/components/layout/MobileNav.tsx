@@ -13,7 +13,7 @@ const menuGroups = [
   {
     title: 'EXPLORE',
     links: [
-      { path: '/', label: 'Mission Control', icon: Home },
+      { path: '/', label: 'หน้าแรก', icon: Home },
     ],
   },
   {
