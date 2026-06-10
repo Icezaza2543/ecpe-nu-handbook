@@ -3,7 +3,8 @@ type ToolLogoMeta = {
   src: string;
 };
 
-const logoPath = (slug: string) => `/tool-logos/devicon/${slug}.svg`;
+const base = import.meta.env.BASE_URL;
+const logoPath = (slug: string) => `${base}tool-logos/devicon/${slug}.svg`;
 
 export const toolLogoById: Record<string, ToolLogoMeta> = {
   'visual-studio-code': { slug: 'vscode', src: logoPath('vscode') },
