@@ -231,10 +231,6 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
         </div>
 
         <aside className="visual-command-canvas" aria-label="ตัวอย่างภาพรวมหลักสูตร">
-          <div className="visual-canvas__toolbar">
-            <span>ECPE Handbook</span>
-            <strong>READY</strong>
-          </div>
           <div className="visual-canvas__network" aria-hidden="true">
             <div className="visual-orbit-system">
               
@@ -285,13 +281,6 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
                 <span className="badge-ready">READY</span>
               </div>
             </div>
-          </div>
-          <div className="visual-canvas__panel">
-            <div>
-              <Sparkles size={18} aria-hidden="true" />
-              <span>แผนภาพที่ใช้งานได้จริง</span>
-            </div>
-            <p>เลือก map ตามคำถามที่มี แล้วกดเข้าไปสำรวจข้อมูลจริงของหลักสูตร</p>
           </div>
         </aside>
       </section>

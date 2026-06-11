@@ -95,19 +95,12 @@
 }
 
 .visual-command-canvas {
-  display: grid;
-  grid-template-rows: auto minmax(260px, 1fr) auto;
-  gap: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 0;
-  border: 1px solid rgba(16, 24, 40, 0.14);
-  border-radius: var(--radius-lg);
+  background: transparent;
   padding: 16px;
-  background:
-    linear-gradient(rgba(16, 24, 40, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 24, 40, 0.055) 1px, transparent 1px),
-    rgba(255, 255, 255, 0.9);
-  background-size: 28px 28px, 28px 28px, auto;
-  box-shadow: var(--shadow-sm);
 }
 
 .visual-canvas__toolbar {
@@ -142,7 +135,8 @@
   inset: 0;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  transform: perspective(1000px) rotateX(60deg);
+  transform-style: preserve-3d;
 }
 
 .orbit-center {
@@ -160,6 +154,7 @@
   color: var(--primary-strong);
   font-weight: 800;
   font-size: 1.1rem;
+  transform: rotateX(-60deg) translateZ(40px);
 }
 
 .badge-ready {
@@ -176,6 +171,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
+  transform-style: preserve-3d;
 }
 .orbit-track--1 { width: 150px; height: 150px; border: 1px dashed rgba(79,124,255,0.4); animation: spin 8s linear infinite; }
 .orbit-track--2 { width: 240px; height: 240px; border: 1px dashed rgba(16,185,129,0.4); animation: spin 14s linear infinite reverse; }
@@ -185,6 +181,7 @@
 .orbit-item {
   position: absolute;
   top: -16px; 
+  transform-style: preserve-3d;
 }
 
 .orbit-content {
@@ -200,6 +197,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  transform: rotateX(-60deg);
 }
 .orbit-track--1 .orbit-content { animation: anti-spin 8s linear infinite; }
 .orbit-track--2 .orbit-content { animation: anti-spin 14s linear infinite reverse; }
