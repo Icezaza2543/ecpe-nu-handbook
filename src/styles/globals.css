@@ -5,13 +5,11 @@
 body {
   margin: 0;
   min-width: 320px;
-  background: 
-    radial-gradient(circle at 80% -10%, rgba(123, 97, 255, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at -10% 40%, rgba(79, 124, 255, 0.06) 0%, transparent 35%),
-    radial-gradient(circle at 90% 80%, rgba(53, 201, 255, 0.07) 0%, transparent 40%),
-    radial-gradient(circle at 10% 110%, rgba(255, 111, 216, 0.04) 0%, transparent 40%),
-    var(--bg);
-  background-attachment: fixed;
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.045) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fbff 0%, var(--bg) 48%, #eef5ff 100%);
+  background-size: 40px 40px, 40px 40px, auto;
   color: var(--text);
   font-family: var(--font-sans);
   line-height: 1.65;
@@ -22,7 +20,7 @@ body.is-modal-open {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--violet));
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -34,7 +32,7 @@ body.is-modal-open {
   background-clip: text;
 }
 .text-gradient-violet {
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--violet), var(--primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -83,7 +81,7 @@ h1, h2, h3 {
 h1 {
   font-size: clamp(2.2rem, 4.5vw, 4rem);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   margin-bottom: 1.2rem;
 }
 

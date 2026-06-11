@@ -11,6 +11,9 @@ export default defineConfig({
           if (req.url === '/' || req.url === '/index.html') {
             res.writeHead(302, { Location: '/ecpe-nu-handbook/' });
             res.end();
+          } else if (req.url === '/ecpe-nu-handbook') {
+            res.writeHead(302, { Location: '/ecpe-nu-handbook/' });
+            res.end();
           } else {
             next();
           }

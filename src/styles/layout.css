@@ -29,7 +29,7 @@
   place-items: center;
   width: 42px;
   height: 42px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: linear-gradient(135deg, var(--primary), var(--cyan));
   color: white;
   font-weight: 700;
@@ -161,16 +161,16 @@ main {
 .primary-button {
   margin-top: 26px;
   padding: 12px 20px;
-  background: linear-gradient(135deg, var(--primary), var(--violet));
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
   color: white;
   font-weight: 600;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 14px rgba(123, 97, 255, 0.3);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.22);
 }
 
 .primary-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(123, 97, 255, 0.4);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.28);
 }
 
 .secondary-button {

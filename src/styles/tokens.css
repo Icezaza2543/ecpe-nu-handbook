@@ -1,22 +1,23 @@
 :root {
   --font-sans: "Prompt", "Segoe UI", system-ui, sans-serif;
-  --bg: #F3F6FF;
-  --bg-strong: #E9EEFA;
-  --surface: rgba(255, 255, 255, 0.85);
+  --font-mono: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --bg: #F6F8FC;
+  --bg-strong: #E8EEF7;
+  --surface: rgba(255, 255, 255, 0.92);
   --surface-solid: #ffffff;
-  --surface-muted: rgba(255, 255, 255, 0.5);
-  --text: #15213A;
-  --text-muted: #5E6B85;
-  --border: rgba(110, 130, 255, 0.12);
-  --primary: #4F7CFF;
-  --primary-strong: #3B5FDB;
-  --cyan: #35C9FF;
-  --violet: #7B61FF;
-  --pink: #FF6FD8;
-  --danger: #FF5A79;
+  --surface-muted: rgba(248, 251, 255, 0.82);
+  --text: #101828;
+  --text-muted: #516075;
+  --border: rgba(16, 24, 40, 0.12);
+  --primary: #2563EB;
+  --primary-strong: #1D4ED8;
+  --cyan: #0891B2;
+  --violet: #6D28D9;
+  --pink: #DB2777;
+  --danger: #E11D48;
   --orange: #FF9E57;
   --warning: #FF9E57;
-  --success: #4EE6B2;
+  --success: #059669;
 
   /* Spacing scale */
   --space-xs: 4px;
@@ -28,13 +29,13 @@
   --space-3xl: 64px;
 
   /* Shadows */
-  --shadow-sm: 0 4px 16px rgba(47, 91, 255, 0.04);
-  --shadow: 0 10px 30px rgba(47, 91, 255, 0.08);
-  --shadow-hover: 0 20px 40px rgba(47, 91, 255, 0.14), 0 0 0 2px rgba(123, 97, 255, 0.2) inset;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 8px 24px rgba(16, 24, 40, 0.04);
+  --shadow: 0 14px 42px rgba(16, 24, 40, 0.09);
+  --shadow-hover: 0 18px 48px rgba(16, 24, 40, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.26) inset;
 
   /* Radii */
-  --radius: 22px;
-  --radius-lg: 28px;
+  --radius: 10px;
+  --radius-lg: 14px;
 
   /* Transitions */
   --transition-fast: 150ms ease;
