@@ -24,7 +24,7 @@ import { WorkloadHeatmap } from '../components/visuals/WorkloadHeatmap';
 import { Year4DecisionWorkflow } from '../components/visuals/Year4DecisionWorkflow';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { VisualFallback } from '../components/common/VisualFallback';
-import { AnimatedDependencyMap } from '../components/home/AnimatedDependencyMap';
+import { AnimatedVisualHero } from '../components/visuals/AnimatedVisualHero';
 
 type VisualMapItem = {
   id: string;
@@ -228,7 +228,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
         </div>
 
         <aside className="visual-command-canvas" aria-label="ตัวอย่างภาพรวมหลักสูตร">
-          <AnimatedDependencyMap />
+          <AnimatedVisualHero />
         </aside>
       </section>
 

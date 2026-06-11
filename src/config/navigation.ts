@@ -39,8 +39,8 @@ export const navGroups: NavGroup[] = [
   {
     label: 'RESOURCES',
     items: [
-      { path: '/survival-guide', label: 'คู่มือเอาตัวรอด', icon: Sparkles },
       { path: '/tools-sources', label: 'สิ่งที่มหาลัยไม่ได้สอน', icon: Compass },
+      { path: '/survival-guide', label: 'คู่มือเอาตัวรอด', icon: Sparkles },
       { path: '/faq', label: 'FAQ', icon: HelpCircle },
       { path: '/senior-tips', label: 'คำแนะนำจากรุ่นพี่', icon: Users },
     ],
