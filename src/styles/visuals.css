@@ -131,72 +131,86 @@
 
 .visual-canvas__network {
   position: relative;
-  min-height: 290px;
+  min-height: 380px;
   border-radius: var(--radius);
   overflow: hidden;
 }
 
-.visual-canvas__network::before,
-.visual-canvas__network::after {
-  content: "";
+/* Orbit System */
+.visual-orbit-system {
   position: absolute;
-  inset: 48% 10% auto 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.45), transparent);
-}
-
-.visual-canvas__network::after {
-  inset: 14% auto 14% 49%;
-  width: 2px;
-  height: auto;
-  background: linear-gradient(180deg, transparent, rgba(8, 145, 178, 0.46), transparent);
-}
-
-.visual-node {
-  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
-  min-height: 44px;
-  border: 1px solid rgba(16, 24, 40, 0.12);
-  border-radius: 10px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
+  overflow: hidden;
 }
 
-.visual-node--core {
-  inset: 42% auto auto 37%;
-  min-width: 132px;
-  border-color: rgba(37, 99, 235, 0.34);
+.orbit-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 16px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(79, 124, 255, 0.3);
+  box-shadow: 0 0 30px rgba(79, 124, 255, 0.2);
   color: var(--primary-strong);
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
-.visual-node--math {
-  top: 18%;
-  left: 6%;
-  color: var(--violet);
+.badge-ready {
+  background: #10b981;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 900;
 }
 
-.visual-node--code {
-  top: 14%;
-  right: 7%;
-  color: var(--cyan);
+.orbit-track {
+  position: absolute;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.orbit-track--1 { width: 150px; height: 150px; border: 1px dashed rgba(79,124,255,0.4); animation: spin 8s linear infinite; }
+.orbit-track--2 { width: 240px; height: 240px; border: 1px dashed rgba(16,185,129,0.4); animation: spin 14s linear infinite reverse; }
+.orbit-track--3 { width: 330px; height: 330px; border: 1px dashed rgba(245,158,11,0.4); animation: spin 20s linear infinite; }
+.orbit-track--fast { width: 200px; height: 200px; border: 2px solid rgba(139,92,246,0.15); animation: spin 2s linear infinite; }
+
+.orbit-item {
+  position: absolute;
+  top: -16px; 
 }
 
-.visual-node--risk {
-  bottom: 18%;
-  left: 9%;
-  color: var(--danger);
+.orbit-content {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.orbit-track--1 .orbit-content { animation: anti-spin 8s linear infinite; }
+.orbit-track--2 .orbit-content { animation: anti-spin 14s linear infinite reverse; }
+.orbit-track--3 .orbit-content { animation: anti-spin 20s linear infinite; }
+.orbit-track--fast .orbit-content { animation: anti-spin 2s linear infinite; background: transparent; border: none; box-shadow: none; padding: 0; }
 
-.visual-node--career {
-  right: 5%;
-  bottom: 17%;
-  color: var(--success);
+@keyframes spin {
+  to { rotate: 360deg; }
+}
+@keyframes anti-spin {
+  to { rotate: -360deg; }
 }
 
 .visual-canvas__panel {

@@ -534,27 +534,7 @@ export function BeyondClassroomPage() {
           <small>หน้านี้เป็นคำแนะนำจากมุมรุ่นพี่ ไม่ใช่ข้อกำหนดทางการของหลักสูตร</small>
         </div>
 
-        <aside className="beyond-quote-card" aria-label="สรุป readiness stack">
-          <div className="beyond-stack-header">
-            <Wrench size={22} aria-hidden="true" />
-            <span>Readiness Stack</span>
-          </div>
-          <div className="beyond-stack-metrics">
-            <div>
-              <strong>{tools.length}</strong>
-              <span>Tools</span>
-            </div>
-            <div>
-              <strong>{sources.length}</strong>
-              <span>Sources</span>
-            </div>
-            <div>
-              <strong>{realWorldSkills.length}</strong>
-              <span>Skills</span>
-            </div>
-          </div>
-          <p>เลือกเป้าหมายก่อน แล้ว Explorer จะกรอง toolchain ที่ควรรู้ให้ทันที</p>
-        </aside>
+
       </section>
 
       <section className="beyond-command-center" aria-label="ค้นหาและทางลัด">

@@ -5,6 +5,7 @@ import './styles/layout.css';
 import './styles/visuals.css';
 import './styles/home.css';
 import './styles/roadmaps.css';
+import './styles/patterns.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

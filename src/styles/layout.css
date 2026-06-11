@@ -1152,6 +1152,8 @@ main {
   display: grid;
   gap: 16px;
   padding: 18px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
 }
 
 .course-inspector__header {

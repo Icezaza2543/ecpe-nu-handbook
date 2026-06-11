@@ -72,10 +72,6 @@ function getCourseTitle(course: Course) {
 export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex }) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
-  const [source, setSource] = useState('all');
-  const [category, setCategory] = useState('all');
-  const [career, setCareer] = useState('all');
-  const [dangerOnly, setDangerOnly] = useState(false);
   const [sort, setSort] = useState<SortMode>('code');
   const [viewMode, setViewMode] = useState<ViewMode>(() =>
     typeof window !== 'undefined' && window.innerWidth > 768 ? 'list' : 'grid',
@@ -83,10 +79,6 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const debouncedQuery = useDebouncedValue(query);
   const { openCourse } = useCourseModal();
-  const careerOptions = Array.from(new Set(courseIndex.courses.flatMap((course) => course.careerPaths || []))).sort();
-  const categoryOptions = Array.from(
-    new Set(courseIndex.courses.map((course) => course.category).filter((item): item is string => Boolean(item))),
-  ).sort();
 
   const filtered = useMemo(() => {
     let baseCourses = courseIndex.getCatalogCourses();
@@ -98,15 +90,7 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
     }
 
     const result = baseCourses.filter((course) => {
-      const matchType = type === 'all' || course.type === type;
-      const matchSource =
-        source === 'all' ||
-        course.sourceConfidence === source ||
-        (source === 'needs' && (course.needsVerification || course.sourceConfidence === 'needs-verification'));
-      const matchCategory = category === 'all' || course.category === category;
-      const matchCareer = career === 'all' || course.careerPaths?.includes(career);
-      const matchDanger = !dangerOnly || course.dangerousToFail;
-      return matchType && matchSource && matchCategory && matchCareer && matchDanger;
+      return type === 'all' || course.type === type;
     });
 
     return result.sort((a, b) => {
@@ -118,7 +102,7 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
       }
       return String(a.code || '').localeCompare(String(b.code || ''));
     });
-  }, [career, category, courseIndex, dangerOnly, debouncedQuery, sort, source, type]);
+  }, [courseIndex, debouncedQuery, sort, type]);
 
   useEffect(() => {
     if (!filtered.length) {
@@ -159,10 +143,9 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
       <section className="course-catalog-hero" aria-label="Course catalog overview">
         <div>
           <span className="technical-label">Course Explorer</span>
-          <h1>รายวิชาทั้งหมดในมุมมองแบบ Data Explorer</h1>
+          <h1>รายวิชาทั้งหมด</h1>
           <p>
-            ค้นหา กรอง และไล่ดูรายวิชาโดยไม่หลุด context เลือกรายการด้านซ้ายแล้วอ่านรายละเอียดสำคัญใน inspector
-            ด้านขวา ก่อนเปิดรายละเอียดเต็มเมื่อจำเป็น
+            ค้นหา กรอง และไล่ดูรายวิชาทั้งหมดในหลักสูตร วิศวกรรมคอมพิวเตอร์
           </p>
         </div>
         <aside className="course-hero-panel" aria-label="Catalog signal">
@@ -197,38 +180,11 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
           <option value="major-elective">วิชาเลือกเฉพาะ</option>
           <option value="non-credit">ไม่นับหน่วยกิต</option>
         </select>
-        <select value={source} onChange={(event) => setSource(event.target.value)} aria-label="filter source">
-          <option value="all">ทุกแหล่งอ้างอิง</option>
-          <option value="verified-official">ข้อมูลทางการ</option>
-          <option value="verified-description">คำอธิบายตรวจแล้ว</option>
-          <option value="needs">รอตรวจสอบ</option>
-        </select>
-        <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="filter category">
-          <option value="all">ทุกหมวด</option>
-          {categoryOptions.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <select value={career} onChange={(event) => setCareer(event.target.value)} aria-label="filter career">
-          <option value="all">ทุก career path</option>
-          {careerOptions.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
         <select value={sort} onChange={(event) => setSort(event.target.value as SortMode)} aria-label="sort">
           <option value="code">เรียงตามรหัส</option>
           <option value="year">เรียงตามปี</option>
           <option value="name">เรียงตามชื่อ</option>
         </select>
-        <label className="inline-check catalog-danger-toggle">
-          <input type="checkbox" checked={dangerOnly} onChange={(event) => setDangerOnly(event.target.checked)} />
-          <ShieldAlert size={17} aria-hidden="true" />
-          ห้ามพลาด
-        </label>
         <div className="catalog-view-toggle" aria-label="เลือกมุมมอง">
           <button
             type="button"

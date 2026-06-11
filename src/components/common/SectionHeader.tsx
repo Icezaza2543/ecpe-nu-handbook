@@ -2,15 +2,17 @@ export function SectionHeader({
   title, 
   description, 
   as: HeadingTag = 'h1',
-  variant = 'default' 
+  variant = 'default',
+  className = ''
 }: { 
   title: string; 
   description?: string; 
   as?: 'h1' | 'h2';
-  variant?: 'default' | 'hero' 
+  variant?: 'default' | 'hero';
+  className?: string;
 }) {
   return (
-    <header className="section-header" style={{
+    <header className={`section-header ${className}`} style={{
       position: 'relative',
       overflow: 'hidden',
       padding: variant === 'hero' ? '48px 32px' : '32px',

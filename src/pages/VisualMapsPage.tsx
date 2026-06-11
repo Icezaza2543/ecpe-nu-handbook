@@ -5,9 +5,12 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Book,
+  BookOpen,
   GraduationCap,
   Grid,
   Layers3,
+  Library,
   Map,
   Maximize2,
   Network,
@@ -212,10 +215,9 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
       <section className="visual-command" aria-label="Visual maps command center">
         <div className="visual-command__copy">
           <span className="technical-label">Visual Maps</span>
-          <h1>แผนภาพหลักสูตรแบบ Control Center</h1>
+          <h1>แผนภาพหลักสูตร</h1>
           <p>
-            ไม่ต้องเดาหลักสูตรจากตารางยาว ๆ หน้านี้รวมแผนภาพที่ช่วยอ่าน 4 ปี, วิชาตัวต่อ, workload,
-            GenEd และเงื่อนไขก่อนจบในมุมเดียว
+            สรุปรวมหลักสูตร 4 ปี พร้อมเงื่อนไขจบการศึกษาในชุดเดียว
           </p>
           <div className="visual-command__actions">
             <button type="button" className="primary-button" onClick={() => setActiveMap('grid')}>
@@ -234,11 +236,55 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
             <strong>READY</strong>
           </div>
           <div className="visual-canvas__network" aria-hidden="true">
-            <span className="visual-node visual-node--core">138 credits</span>
-            <span className="visual-node visual-node--math">Math Chain</span>
-            <span className="visual-node visual-node--code">Programming</span>
-            <span className="visual-node visual-node--risk">Risk Path</span>
-            <span className="visual-node visual-node--career">Career Output</span>
+            <div className="visual-orbit-system">
+              
+              {/* Fast Flying Books Ring */}
+              <div className="orbit-track orbit-track--fast">
+                <div className="orbit-item" style={{ top: '-14px' }}>
+                  <div className="orbit-content"><Book size={24} color="#8b5cf6" /></div>
+                </div>
+                <div className="orbit-item" style={{ top: 'auto', bottom: '-14px' }}>
+                  <div className="orbit-content"><BookOpen size={20} color="#3b82f6" /></div>
+                </div>
+                <div className="orbit-item" style={{ top: 'auto', left: '-14px' }}>
+                  <div className="orbit-content"><Library size={18} color="#f59e0b" /></div>
+                </div>
+              </div>
+
+              {/* Outer Ring */}
+              <div className="orbit-track orbit-track--3">
+                <div className="orbit-item" style={{ top: '-16px' }}>
+                  <div className="orbit-content"><Book size={14} className="text-primary" /> Career Output</div>
+                </div>
+                <div className="orbit-item" style={{ top: 'auto', bottom: '-16px' }}>
+                  <div className="orbit-content"><BookOpen size={14} className="text-warning" /> Risk Path</div>
+                </div>
+              </div>
+
+              {/* Middle Ring - Reverse */}
+              <div className="orbit-track orbit-track--2">
+                <div className="orbit-item" style={{ top: 'auto', left: '-20px' }}>
+                  <div className="orbit-content"><Library size={14} className="text-success" /> Math Chain</div>
+                </div>
+                <div className="orbit-item" style={{ top: 'auto', right: '-20px' }}>
+                  <div className="orbit-content"><BookOpen size={14} className="text-info" /> Programming</div>
+                </div>
+              </div>
+
+              {/* Inner Ring */}
+              <div className="orbit-track orbit-track--1">
+                <div className="orbit-item" style={{ top: '-16px' }}>
+                  <div className="orbit-content"><Sparkles size={14} className="text-primary" /> 138 credits</div>
+                </div>
+              </div>
+
+              {/* Center Node */}
+              <div className="orbit-center">
+                <Library size={28} className="text-primary" />
+                <span>ECPE Handbook</span>
+                <span className="badge-ready">READY</span>
+              </div>
+            </div>
           </div>
           <div className="visual-canvas__panel">
             <div>

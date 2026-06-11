@@ -63,10 +63,9 @@ export function DependencyGraphPage({ courseIndex }: { courseIndex: CourseIndex 
       <section className="dependency-console" aria-label="Prerequisite explorer overview">
         <div className="dependency-console__copy">
           <span className="technical-label">Prerequisite Explorer</span>
-          <h1>วิชาตัวต่อที่อ่านแล้วตัดสินใจได้</h1>
+          <h1>วิชาตัวต่อ</h1>
           <p>
-            เปลี่ยน prerequisite จากเส้นโยงรก ๆ ให้เป็นเครื่องมือวางแผน เริ่มจากโหมดอ่านง่าย แล้วค่อยเปิด graph
-            explore เมื่ออยากสำรวจความเชื่อมโยงละเอียดขึ้น
+            วิชาตัวต่อ คือวิชาที่ต้องผ่านวิชาก่อนหน้า ถึงจะลงทะเบียนเรียนได้ ถ้าติด F จะต้องรอลงเทอมนั้น ๆ ของปีต่อไป
           </p>
 
           <div className="dependency-stats" aria-label="สรุปข้อมูลวิชาตัวต่อ">

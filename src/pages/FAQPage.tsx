@@ -26,6 +26,7 @@ export function FAQPage({ courseIndex }: { courseIndex: CourseIndex }) {
         title="คำถามที่พบบ่อย (FAQ)" 
         description="รวบรวมคำถามที่น้องๆ ปี 1 มักจะสงสัย พร้อมคำตอบฉบับย่อยง่าย"
         variant="hero"
+        className="faq-hero"
       />
       <SearchBox value={query} onChange={setQuery} placeholder="ค้นหา FAQ..." />
       <div className="accordion-list">

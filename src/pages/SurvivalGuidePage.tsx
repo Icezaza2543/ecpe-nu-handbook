@@ -47,9 +47,10 @@ export function SurvivalGuidePage({ courseIndex }: { courseIndex: CourseIndex })
   return (
     <div className="page" style={{ paddingBottom: '100px' }}>
       <SectionHeader 
-        title="คู่มือเอาตัวรอด" 
-        description="Timeline สิ่งที่ต้องทำในแต่ละช่วงเวลา เตรียมตัวล่วงหน้า พร้อม checklist ส่วนตัวของคุณ" 
+        title="คัมภีร์เอาตัวรอด (Survival Guide)" 
+        description="คู่มือเอาชีวิตรอดในแต่ละปีการศึกษา รวบรวมข้อมูลสำคัญที่ต้องรู้เพื่อไม่ให้พลาด"
         variant="hero"
+        className="survival-hero"
       />
       <div className="survival-timeline" style={{ display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative', paddingLeft: '24px' }}>
         {/* Vertical line for timeline */}

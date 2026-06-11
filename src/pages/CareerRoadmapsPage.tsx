@@ -107,10 +107,9 @@ export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }
       <section className="career-command" aria-label="Career roadmap overview">
         <div className="career-command__copy">
           <span className="technical-label">Career Roadmaps</span>
-          <h1>เลือกสายอาชีพแล้วแตกเป็น Skill Tree ที่ลงมือทำได้</h1>
+          <h1>สายอาชีพไหนที่อยากทำ?</h1>
           <p>
-            หน้านี้เชื่อมรายวิชาในหลักสูตรกับทักษะ เครื่องมือ โปรเจกต์ และ checklist สำหรับ portfolio
-            เพื่อให้น้องเห็นว่าแต่ละสายควรเริ่มจากอะไรในปี 1 ถึงปี 4
+            ทักษะ เครื่องมือ และ checklist เพื่อให้น้องเห็นว่าแต่ละสายควรเริ่มจากอะไร
           </p>
         </div>
         <aside className="career-command__panel">
