@@ -43,10 +43,10 @@ const quickStart = [
 
 function MissionGraphPanel() {
   return (
-    <aside className="mission-panel" aria-label="Curriculum OS preview">
+    <aside className="mission-panel" aria-label="Handbook preview">
       <div className="mission-panel__header">
         <div>
-          <h2 className="mission-panel__title">Curriculum OS Preview</h2>
+          <h2 className="mission-panel__title">Handbook Preview</h2>
           <p className="mission-panel__meta">course-map / prerequisite-risk / career-output</p>
         </div>
         <span className="mission-panel__status">READY</span>
@@ -162,7 +162,7 @@ export function HomePage({ courseIndex }: { courseIndex: CourseIndex }) {
         <div className="home-hero__copy">
           <h1>
             ECPE NU
-            <span className="text-gradient">Curriculum OS</span>
+            <span className="text-gradient">Handbook</span>
           </h1>
           <p className="home-hero__subtitle">
             วางแผน 4 ปีแบบเห็น dependency จริง เช็กวิชาที่เป็นคอขวด เลือกสายงานที่อยากลอง และแปลงทุกเทอมให้กลายเป็น portfolio ที่เล่าได้ตอนฝึกงาน

@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppLayout } from './components/layout/AppLayout';
 import { CourseModalProvider } from './components/common/CourseModalProvider';
 import { useCourseIndex } from './hooks/useCourseIndex';
+import { resolveRoutePath } from './utils/routing';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const VisualMapsPage = lazy(() => import('./pages/VisualMapsPage').then((module) => ({ default: module.VisualMapsPage })));
@@ -15,6 +16,18 @@ const BeyondClassroomPage = lazy(() => import('./pages/BeyondClassroomPage').the
 const FAQPage = lazy(() => import('./pages/FAQPage').then((module) => ({ default: module.FAQPage })));
 const SeniorTipsPage = lazy(() => import('./pages/SeniorTipsPage').then((module) => ({ default: module.SeniorTipsPage })));
 const CreditsPage = lazy(() => import('./pages/CreditsPage').then((module) => ({ default: module.CreditsPage })));
+
+function RouteFallback() {
+  const location = useLocation();
+  const pathname = resolveRoutePath(location.pathname);
+
+  return (
+    <Navigate
+      to={{ pathname, search: location.search, hash: location.hash }}
+      replace
+    />
+  );
+}
 
 export default function App() {
   const courseIndex = useCourseIndex();
@@ -36,6 +49,7 @@ export default function App() {
             <Route path="/faq" element={<FAQPage courseIndex={courseIndex} />} />
             <Route path="/senior-tips" element={<SeniorTipsPage courseIndex={courseIndex} />} />
             <Route path="/credits" element={<CreditsPage />} />
+            <Route path="*" element={<RouteFallback />} />
           </Route>
         </Routes>
       </Suspense>

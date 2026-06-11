@@ -1,32 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { BookOpen, Compass, HelpCircle, Home, Map, Network, Route, Sparkles, Users } from 'lucide-react';
-
-const navGroups = [
-  {
-    label: 'EXPLORE',
-    items: [
-      { path: '/', label: 'หน้าแรก', icon: Home },
-    ]
-  },
-  {
-    label: 'CURRICULUM',
-    items: [
-      { path: '/visual-maps', label: 'แผนภาพรวมหลักสูตร', icon: Map },
-      { path: '/courses', label: 'รายวิชาทั้งหมด', icon: BookOpen },
-      { path: '/dependency-graph', label: 'วิชาตัวต่อ', icon: Network },
-      { path: '/roadmaps', label: 'Roadmap อาชีพ', icon: Route },
-    ]
-  },
-  {
-    label: 'RESOURCES',
-    items: [
-      { path: '/survival-guide', label: 'คู่มือเอาตัวรอด', icon: Sparkles },
-      { path: '/tools-sources', label: 'สิ่งที่มหาลัยไม่ได้สอน', icon: Compass },
-      { path: '/faq', label: 'FAQ', icon: HelpCircle },
-      { path: '/senior-tips', label: 'คำแนะนำจากรุ่นพี่', icon: Users },
-    ]
-  }
-];
+import { Sparkles } from 'lucide-react';
+import { navGroups } from '../../config/navigation';
 
 export function Sidebar() {
   return (
@@ -39,8 +13,8 @@ export function Sidebar() {
       </div>
       
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto', paddingRight: '4px' }}>
-        {navGroups.map((group, idx) => (
-          <div key={idx}>
+        {navGroups.map((group) => (
+          <div key={group.label}>
             <div style={{ padding: '0 12px', marginBottom: '8px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               {group.label}
             </div>

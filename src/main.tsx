@@ -10,6 +10,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import { getRouterBasename } from './utils/routing';
 
 import { validateStaticData } from './schemas/validateData';
 import { courses } from './data/courses';
@@ -20,9 +21,11 @@ import { officialPrerequisites } from './data/officialPrerequisites';
 if (import.meta.env.DEV) {
   validateStaticData(courses, studyPlan.years as any[], (curriculumStructure as any).categories || [], officialPrerequisites);
 }
+const routerBasename = getRouterBasename();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename="/ecpe-nu-handbook">
+    <BrowserRouter basename={routerBasename}>
       <App />
     </BrowserRouter>
   </StrictMode>,

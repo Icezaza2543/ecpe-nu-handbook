@@ -2,7 +2,7 @@
 
 ## 1. Product Identity
 - **External Name**: ECPE NU Handbook
-- **Internal Direction**: Curriculum OS
+- **Internal Direction**: Handbook
 - **Audience**: Thai ECPE students, especially freshmen.
 
 ## 2. Visual Language

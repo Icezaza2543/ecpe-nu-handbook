@@ -1,40 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { BookOpen, Compass, HelpCircle, Home, Map, Network, Route, Sparkles, Users, Menu, X } from 'lucide-react';
-
-const primaryLinks = [
-  { path: '/', label: 'หน้าแรก', icon: Home },
-  { path: '/courses', label: 'รายวิชา', icon: BookOpen },
-  { path: '/visual-maps', label: 'แผนภาพ', icon: Map },
-  { path: '/roadmaps', label: 'อาชีพ', icon: Route },
-];
-
-const menuGroups = [
-  {
-    title: 'EXPLORE',
-    links: [
-      { path: '/', label: 'หน้าแรก', icon: Home },
-    ],
-  },
-  {
-    title: 'CURRICULUM',
-    links: [
-      { path: '/visual-maps', label: 'แผนภาพรวมหลักสูตร', icon: Map },
-      { path: '/courses', label: 'รายวิชาทั้งหมด', icon: BookOpen },
-      { path: '/dependency-graph', label: 'วิชาตัวต่อ', icon: Network },
-      { path: '/roadmaps', label: 'Roadmap อาชีพ', icon: Route },
-    ],
-  },
-  {
-    title: 'RESOURCES',
-    links: [
-      { path: '/survival-guide', label: 'คู่มือเอาตัวรอด', icon: Sparkles },
-      { path: '/tools-sources', label: 'สิ่งที่มหาลัยไม่ได้สอน', icon: Compass },
-      { path: '/faq', label: 'FAQ', icon: HelpCircle },
-      { path: '/senior-tips', label: 'คำแนะนำจากรุ่นพี่', icon: Users },
-    ],
-  },
-];
+import { Menu, Sparkles, X } from 'lucide-react';
+import { navGroups, primaryMobileLinks } from '../../config/navigation';
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +37,7 @@ export function MobileNav() {
   return (
     <>
       <nav className="mobile-nav" aria-label="มือถือ">
-        {primaryLinks.map(({ path, label, icon: Icon }) => (
+        {primaryMobileLinks.map(({ path, label, icon: Icon }) => (
           <NavLink key={path} to={path} end={path === '/'}>
             <Icon size={20} aria-hidden="true" />
             <span>{label}</span>
@@ -117,11 +84,11 @@ export function MobileNav() {
         </div>
         
         <div className="sheet-content">
-          {menuGroups.map((group) => (
-            <div key={group.title} className="sheet-group">
-              <h3 className="sheet-group-title">{group.title}</h3>
+          {navGroups.map((group) => (
+            <div key={group.label} className="sheet-group">
+              <h3 className="sheet-group-title">{group.label}</h3>
               <div className="sheet-links">
-                {group.links.map(({ path, label, icon: Icon }) => (
+                {group.items.map(({ path, label, icon: Icon }) => (
                   <NavLink key={path} to={path} end={path === '/'} className="sheet-link">
                     <div className="sheet-icon-wrapper">
                       <Icon size={18} />

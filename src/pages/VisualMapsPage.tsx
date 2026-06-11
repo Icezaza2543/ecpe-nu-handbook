@@ -230,7 +230,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
 
         <aside className="visual-command-canvas" aria-label="ตัวอย่างภาพรวมหลักสูตร">
           <div className="visual-canvas__toolbar">
-            <span>ECPE Curriculum OS</span>
+            <span>ECPE Handbook</span>
             <strong>READY</strong>
           </div>
           <div className="visual-canvas__network" aria-hidden="true">
