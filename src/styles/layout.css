@@ -760,7 +760,7 @@ main {
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 24px 72px;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .course-catalog-page *,

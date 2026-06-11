@@ -216,7 +216,6 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
               <SlidersHorizontal size={18} aria-hidden="true" />
               <span>{filtered.length} รายการ</span>
             </div>
-            <small>กดรายวิชาเพื่ออัปเดต inspector</small>
           </div>
 
           {filtered.length === 0 ? <EmptyState title="ไม่พบรายวิชา" /> : null}
