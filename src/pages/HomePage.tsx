@@ -12,11 +12,11 @@ import {
   Network,
   Route,
   Search,
-  Workflow,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MotionCard } from '../components/common/MotionCard';
 import { HomeInsightDataVizSection } from '../components/home/HomeInsightDataVizSection';
+import { AnimatedDependencyMap } from '../components/home/AnimatedDependencyMap';
 import { useCourseModal } from '../components/common/CourseModalProvider';
 import type { CourseIndex } from '../utils/courseIndex';
 
@@ -25,13 +25,6 @@ const heroMetrics = [
   { value: '17', label: 'วิชาบังคับก่อนที่กระทบแผน' },
   { value: '6', label: 'สายอาชีพให้ลองสำรวจ' },
   { value: '135', label: 'tools และ sources นอกห้องเรียน' },
-];
-
-const workflowSteps = [
-  { icon: Map, title: 'เห็นแผน 4 ปี', desc: 'ไล่ course load และจุดหนักก่อนลงทะเบียน' },
-  { icon: Workflow, title: 'เช็กวิชาตัวต่อ', desc: 'รู้ว่าตัวไหนเป็นคอขวดของเทอมถัดไป' },
-  { icon: Route, title: 'เลือก career track', desc: 'จับคู่รายวิชากับสายงานที่อยากลอง' },
-  { icon: BriefcaseBusiness, title: 'ออก portfolio plan', desc: 'รู้ว่าควรทำ project แบบไหนตั้งแต่ปี 1' },
 ];
 
 const quickStart = [
@@ -52,46 +45,7 @@ function MissionGraphPanel() {
         <span className="mission-panel__status">READY</span>
       </div>
 
-      <div className="mission-graph" aria-hidden="true">
-        <svg viewBox="0 0 620 285" role="presentation">
-          <path d="M310 142 L106 72" stroke="rgba(8, 145, 178, 0.45)" strokeWidth="2" />
-          <path d="M310 142 L496 62" stroke="rgba(37, 99, 235, 0.48)" strokeWidth="2" />
-          <path d="M310 142 L130 224" stroke="rgba(255, 158, 87, 0.52)" strokeWidth="2" />
-          <path d="M310 142 L498 220" stroke="rgba(5, 150, 105, 0.48)" strokeWidth="2" />
-          <path d="M106 72 L496 62" stroke="rgba(16, 24, 40, 0.12)" strokeWidth="1" strokeDasharray="6 8" />
-          <path d="M130 224 L498 220" stroke="rgba(16, 24, 40, 0.12)" strokeWidth="1" strokeDasharray="6 8" />
-        </svg>
-        <div className="mission-node mission-node--core">
-          <strong>ECPE Core</strong>
-          <span>138 credits</span>
-        </div>
-        <div className="mission-node mission-node--math">
-          <strong>Math Chain</strong>
-          <span>{'Calc 1 -> Calc 3'}</span>
-        </div>
-        <div className="mission-node mission-node--code">
-          <strong>Programming</strong>
-          <span>{'Prog -> Data Struct'}</span>
-        </div>
-        <div className="mission-node mission-node--hardware">
-          <strong>Hardware</strong>
-          <span>{'Logic -> Embedded'}</span>
-        </div>
-        <div className="mission-node mission-node--career">
-          <strong>Career Output</strong>
-          <span>6 tracks</span>
-        </div>
-      </div>
-
-      <div className="mission-workflow">
-        {workflowSteps.map((item) => (
-          <div className="workflow-step" key={item.title}>
-            <item.icon size={20} />
-            <strong>{item.title}</strong>
-            <span>{item.desc}</span>
-          </div>
-        ))}
-      </div>
+      <AnimatedDependencyMap />
     </aside>
   );
 }
@@ -165,7 +119,7 @@ export function HomePage({ courseIndex }: { courseIndex: CourseIndex }) {
             <span className="text-gradient">Handbook</span>
           </h1>
           <p className="home-hero__subtitle">
-            วางแผน 4 ปีแบบเห็น dependency จริง เช็กวิชาที่เป็นคอขวด เลือกสายงานที่อยากลอง และแปลงทุกเทอมให้กลายเป็น portfolio ที่เล่าได้ตอนฝึกงาน
+            วางแผนการเรียนแบบเห็นภาพจริง เช็กวิชาเรียน พร้อมเลือกสายงานในอนาคต
           </p>
 
           <div className="hero-actions">

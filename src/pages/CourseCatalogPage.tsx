@@ -15,7 +15,7 @@ import {
   List,
   Network,
   PanelRightOpen,
-  ShieldAlert,
+
   SlidersHorizontal,
 } from 'lucide-react';
 

@@ -5,17 +5,13 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
-  Book,
-  BookOpen,
   GraduationCap,
   Grid,
   Layers3,
-  Library,
   Map,
   Maximize2,
   Network,
-  Route,
-  Sparkles,
+  Route
 } from 'lucide-react';
 import type { CourseIndex } from '../utils/courseIndex';
 import { CriticalPathMap } from '../components/visuals/CriticalPathMap';
@@ -23,11 +19,12 @@ import { CurriculumFlowchart } from '../components/visuals/CurriculumFlowchart';
 import { CurriculumGridDiagram } from '../components/visuals/CurriculumGridDiagram';
 import { GenEdExplorer } from '../components/visuals/GenEdExplorer';
 import { GraduationWorkflow } from '../components/visuals/GraduationWorkflow';
-import { OfficialPrerequisiteGraph } from '../components/visuals/OfficialPrerequisiteGraph';
+import { InteractiveCurriculumGraph } from '../components/visuals/interactive-graph/InteractiveCurriculumGraph';
 import { WorkloadHeatmap } from '../components/visuals/WorkloadHeatmap';
 import { Year4DecisionWorkflow } from '../components/visuals/Year4DecisionWorkflow';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { VisualFallback } from '../components/common/VisualFallback';
+import { AnimatedDependencyMap } from '../components/home/AnimatedDependencyMap';
 
 type VisualMapItem = {
   id: string;
@@ -89,7 +86,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
       cta: 'ตรวจวิชาตัวต่อ',
       preview: ['Calc', 'Prog', 'Logic', 'Project'],
       questions: ['ถ้าดรอปวิชานี้จะกระทบตัวไหน?', 'วิชาไหนที่มีตัวต่อเยอะสุด?'],
-      component: <OfficialPrerequisiteGraph courseIndex={courseIndex} />,
+      component: <InteractiveCurriculumGraph />,
     },
     {
       id: 'critical',
@@ -231,57 +228,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
         </div>
 
         <aside className="visual-command-canvas" aria-label="ตัวอย่างภาพรวมหลักสูตร">
-          <div className="visual-canvas__network" aria-hidden="true">
-            <div className="visual-orbit-system">
-              
-              {/* Fast Flying Books Ring */}
-              <div className="orbit-track orbit-track--fast">
-                <div className="orbit-item" style={{ top: '-14px' }}>
-                  <div className="orbit-content"><Book size={24} color="#8b5cf6" /></div>
-                </div>
-                <div className="orbit-item" style={{ top: 'auto', bottom: '-14px' }}>
-                  <div className="orbit-content"><BookOpen size={20} color="#3b82f6" /></div>
-                </div>
-                <div className="orbit-item" style={{ top: 'auto', left: '-14px' }}>
-                  <div className="orbit-content"><Library size={18} color="#f59e0b" /></div>
-                </div>
-              </div>
-
-              {/* Outer Ring */}
-              <div className="orbit-track orbit-track--3">
-                <div className="orbit-item" style={{ top: '-16px' }}>
-                  <div className="orbit-content"><Book size={14} className="text-primary" /> Career Output</div>
-                </div>
-                <div className="orbit-item" style={{ top: 'auto', bottom: '-16px' }}>
-                  <div className="orbit-content"><BookOpen size={14} className="text-warning" /> Risk Path</div>
-                </div>
-              </div>
-
-              {/* Middle Ring - Reverse */}
-              <div className="orbit-track orbit-track--2">
-                <div className="orbit-item" style={{ top: 'auto', left: '-20px' }}>
-                  <div className="orbit-content"><Library size={14} className="text-success" /> Math Chain</div>
-                </div>
-                <div className="orbit-item" style={{ top: 'auto', right: '-20px' }}>
-                  <div className="orbit-content"><BookOpen size={14} className="text-info" /> Programming</div>
-                </div>
-              </div>
-
-              {/* Inner Ring */}
-              <div className="orbit-track orbit-track--1">
-                <div className="orbit-item" style={{ top: '-16px' }}>
-                  <div className="orbit-content"><Sparkles size={14} className="text-primary" /> 138 credits</div>
-                </div>
-              </div>
-
-              {/* Center Node */}
-              <div className="orbit-center">
-                <Library size={28} className="text-primary" />
-                <span>ECPE Handbook</span>
-                <span className="badge-ready">READY</span>
-              </div>
-            </div>
-          </div>
+          <AnimatedDependencyMap />
         </aside>
       </section>
 
