@@ -73,6 +73,19 @@ p {
   margin-top: 0;
 }
 
+h1,
+h2,
+h3,
+p,
+span,
+small,
+strong,
+button,
+a,
+li {
+  overflow-wrap: anywhere;
+}
+
 h1, h2, h3 {
   font-weight: 700;
   color: var(--text);

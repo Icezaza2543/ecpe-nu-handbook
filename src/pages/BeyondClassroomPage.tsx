@@ -12,7 +12,6 @@ import {
   Layers3,
   ListChecks,
   Search,
-  Sparkles,
   Wrench,
   X,
 } from 'lucide-react';
@@ -385,7 +384,7 @@ export function BeyondClassroomPage() {
   const [drawer, setDrawer] = useState<DrawerState | null>(null);
 
   useEffect(() => {
-    const title = 'สิ่งที่มหาลัยไม่ได้สอน | ECPE NU Freshman Handbook';
+    const title = 'Toolchain Lab | ECPE NU Freshman Handbook';
     const description = 'เครื่องมือ แหล่งเรียนรู้ และทักษะโลกงานจริงที่นิสิต Computer Engineering ควรรู้จักตั้งแต่ปีแรก';
     document.title = title;
 
@@ -526,18 +525,35 @@ export function BeyondClassroomPage() {
     <div className="page beyond-page">
       <section className="beyond-hero" id="start">
         <div className="beyond-hero__copy">
-          <h1>สิ่งที่มหาลัยไม่ได้สอน</h1>
+          <span className="technical-label">Toolchain Lab</span>
+          <h1>เครื่องมือและแหล่งเรียนรู้นอกห้องเรียน</h1>
           <p>
-            เครื่องมือ แหล่งเรียนรู้ และทักษะโลกงานจริงที่น้องควรรู้จักไว้ตั้งแต่ปี 1 เพราะหลายอย่างไม่ได้อยู่ในสไลด์เรียน
-            แต่จะเจอแน่นอนตอนทำโปรเจกต์ ฝึกงาน และหางาน
+            รวมเครื่องมือ แหล่งเรียนรู้ และทักษะโลกงานจริงที่น้องควรรู้จักตั้งแต่ปี 1
+            เพื่อเตรียมทำโปรเจกต์ ฝึกงาน และสร้าง portfolio แบบไม่เริ่มจากศูนย์
           </p>
           <small>หน้านี้เป็นคำแนะนำจากมุมรุ่นพี่ ไม่ใช่ข้อกำหนดทางการของหลักสูตร</small>
         </div>
 
-        <aside className="beyond-quote-card" aria-label="คำแนะนำจากรุ่นพี่">
-          <Sparkles size={24} aria-hidden="true" />
-          <blockquote>“ไม่ต้องใช้เป็นทุกอย่างตั้งแต่ปี 1 แต่ควรรู้ว่ามันมีไว้ทำอะไร”</blockquote>
-          <p>มหาลัยให้พื้นฐานคิดเป็น ส่วนหน้านี้ช่วยเติมของที่ต้องใช้จริง</p>
+        <aside className="beyond-quote-card" aria-label="สรุป readiness stack">
+          <div className="beyond-stack-header">
+            <Wrench size={22} aria-hidden="true" />
+            <span>Readiness Stack</span>
+          </div>
+          <div className="beyond-stack-metrics">
+            <div>
+              <strong>{tools.length}</strong>
+              <span>Tools</span>
+            </div>
+            <div>
+              <strong>{sources.length}</strong>
+              <span>Sources</span>
+            </div>
+            <div>
+              <strong>{realWorldSkills.length}</strong>
+              <span>Skills</span>
+            </div>
+          </div>
+          <p>เลือกเป้าหมายก่อน แล้ว Explorer จะกรอง toolchain ที่ควรรู้ให้ทันที</p>
         </aside>
       </section>
 

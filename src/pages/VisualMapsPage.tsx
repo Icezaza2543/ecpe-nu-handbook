@@ -1,6 +1,19 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Maximize2, Map, Network, AlertTriangle, Route, GraduationCap, Grid, Activity } from 'lucide-react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Activity,
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  GraduationCap,
+  Grid,
+  Layers3,
+  Map,
+  Maximize2,
+  Network,
+  Route,
+  Sparkles,
+} from 'lucide-react';
 import type { CourseIndex } from '../utils/courseIndex';
 import { CriticalPathMap } from '../components/visuals/CriticalPathMap';
 import { CurriculumFlowchart } from '../components/visuals/CurriculumFlowchart';
@@ -10,168 +23,321 @@ import { GraduationWorkflow } from '../components/visuals/GraduationWorkflow';
 import { OfficialPrerequisiteGraph } from '../components/visuals/OfficialPrerequisiteGraph';
 import { WorkloadHeatmap } from '../components/visuals/WorkloadHeatmap';
 import { Year4DecisionWorkflow } from '../components/visuals/Year4DecisionWorkflow';
-import { SectionHeader } from '../components/common/SectionHeader';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { VisualFallback } from '../components/common/VisualFallback';
-import { MotionCard } from '../components/common/MotionCard';
+
+type VisualMapItem = {
+  id: string;
+  title: string;
+  desc: string;
+  icon: typeof Grid;
+  color: string;
+  bg: string;
+  mode: string;
+  signal: string;
+  cta: string;
+  preview: string[];
+  questions: string[];
+  component: ReactNode;
+};
 
 export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
   const [activeMap, setActiveMap] = useState<string | null>(null);
+  const catalogCount = courseIndex.getCatalogCourses().length;
 
-  const maps = [
+  const maps: VisualMapItem[] = [
     {
       id: 'grid',
-      title: 'แผนการศึกษา 4 ปี (Grid)',
-      desc: 'ดูโครงสร้างหลักสูตรแบบตาราง ว่าเทอมไหนต้องเรียนอะไรบ้างตาม มคอ.2',
+      title: 'แผนการศึกษา 4 ปี',
+      desc: 'วางภาพรวม 8 เทอมให้เห็นหน่วยกิต วิชาแกน และช่วงที่ workload เริ่มแน่น',
       icon: Grid,
       color: 'var(--primary)',
-      bg: 'rgba(79, 124, 255, 0.1)',
+      bg: 'rgba(37, 99, 235, 0.1)',
+      mode: 'Plan View',
+      signal: '8 เทอม',
+      cta: 'เปิดแผน 4 ปี',
+      preview: ['ปี 1', 'ปี 2', 'ปี 3', 'ปี 4'],
       questions: ['ปี 1 ต้องลงเรียนอะไรบ้าง?', 'วิชาเลือกเสรีลงเทอมไหนดี?'],
-      component: <CurriculumGridDiagram courseIndex={courseIndex} />
+      component: <CurriculumGridDiagram courseIndex={courseIndex} />,
     },
     {
       id: 'flowchart',
-      title: 'Curriculum Flowchart',
-      desc: 'แผนภาพแสดงลำดับการเรียนวิชาต่างๆ ตามหมวดหมู่',
+      title: 'Flowchart หมวดวิชา',
+      desc: 'จัดรายวิชาเป็นสายความรู้ เพื่อเห็นว่าพื้นฐานแต่ละก้อนพาไปต่อด้านไหน',
       icon: Map,
       color: 'var(--cyan)',
-      bg: 'rgba(6, 182, 212, 0.1)',
+      bg: 'rgba(8, 145, 178, 0.1)',
+      mode: 'Cluster View',
+      signal: 'หมวดวิชา',
+      cta: 'ดูสายความรู้',
+      preview: ['Math', 'Code', 'Hardware', 'Project'],
       questions: ['วิชานี้อยู่ในหมวดไหน?', 'ปี 3 มีเรียนอะไรบ้าง?'],
-      component: <CurriculumFlowchart />
+      component: <CurriculumFlowchart />,
     },
     {
       id: 'prereq',
-      title: 'แผนภาพวิชาตัวต่อ (Official)',
-      desc: 'ดูโครงข่ายวิชาตัวต่อแบบโยงเส้นทั้งหมด',
+      title: 'โครงข่ายวิชาตัวต่อ',
+      desc: 'อ่านเงื่อนไขวิชาบังคับก่อนแบบซ้ายไปขวา แล้วสลับเป็น graph explore ได้',
       icon: Network,
       color: 'var(--violet)',
-      bg: 'rgba(123, 97, 255, 0.1)',
+      bg: 'rgba(109, 40, 217, 0.1)',
+      mode: 'Prerequisite Explorer',
+      signal: 'วิชาตัวต่อ',
+      cta: 'ตรวจวิชาตัวต่อ',
+      preview: ['Calc', 'Prog', 'Logic', 'Project'],
       questions: ['ถ้าดรอปวิชานี้จะกระทบตัวไหน?', 'วิชาไหนที่มีตัวต่อเยอะสุด?'],
-      component: <OfficialPrerequisiteGraph courseIndex={courseIndex} />
+      component: <OfficialPrerequisiteGraph courseIndex={courseIndex} />,
     },
     {
       id: 'critical',
-      title: 'Critical Path Map',
-      desc: 'เส้นทางวิกฤตที่ห้ามตกเด็ดขาด ไม่เช่นนั้นอาจเรียนจบช้ากว่า 4 ปี',
+      title: 'แผนที่เส้นทางเสี่ยง',
+      desc: 'รวมสายวิชาที่ถ้าพลาดแล้วกระทบต่อเนื่อง เหมาะกับการเช็กก่อนลงทะเบียนทุกเทอม',
       icon: AlertTriangle,
-      color: '#f43f5e',
-      bg: 'rgba(244, 63, 94, 0.1)',
+      color: 'var(--danger)',
+      bg: 'rgba(225, 29, 72, 0.1)',
+      mode: 'Risk Map',
+      signal: 'ห้ามพลาด',
+      cta: 'ดูเส้นทางเสี่ยง',
+      preview: ['เสี่ยงสูง', 'คอขวด', 'กระทบแผน', 'แก้ทาง'],
       questions: ['วิชาไหนคือคอขวด?', 'ถ้าตกวิชานี้จะจบ 4 ปีไหม?'],
-      component: <CriticalPathMap courseIndex={courseIndex} />
+      component: <CriticalPathMap courseIndex={courseIndex} />,
     },
     {
       id: 'year4',
-      title: 'Year 4 Decision Workflow',
-      desc: 'แผนผังการตัดสินใจเลือกทำโปรเจกต์ หรือสหกิจศึกษาในปี 4',
+      title: 'ตัวเลือกปี 4',
+      desc: 'เทียบเส้นทางโปรเจกต์ สหกิจ และการเตรียมตัวก่อนออกไปเจองานจริง',
       icon: Route,
       color: 'var(--orange)',
-      bg: 'rgba(249, 115, 22, 0.1)',
+      bg: 'rgba(255, 158, 87, 0.12)',
+      mode: 'Decision Flow',
+      signal: 'Project / Co-op',
+      cta: 'เปิด workflow ปี 4',
+      preview: ['เตรียมตัว', 'เลือกทาง', 'เอกสาร', 'จบงาน'],
       questions: ['ไปสหกิจต้องเตรียมตัวยังไง?', 'ทำโปรเจกต์มีกี่ขั้นตอน?'],
-      component: <Year4DecisionWorkflow courseIndex={courseIndex} />
+      component: <Year4DecisionWorkflow courseIndex={courseIndex} />,
     },
     {
       id: 'grad',
-      title: 'Graduation Workflow',
-      desc: 'เงื่อนไขและขั้นตอนทั้งหมดที่ต้องผ่านก่อนจะขอจบการศึกษาได้',
+      title: 'เช็กลิสต์ก่อนจบ',
+      desc: 'เช็กเงื่อนไขหลัก หน่วยกิต ขั้นตอน และรายการที่ไม่ควรปล่อยจนเทอมสุดท้าย',
       icon: GraduationCap,
       color: 'var(--success)',
-      bg: 'rgba(16, 185, 129, 0.1)',
+      bg: 'rgba(5, 150, 105, 0.1)',
+      mode: 'Graduation Gate',
+      signal: 'ก่อนจบ',
+      cta: 'ตรวจเงื่อนไข',
+      preview: ['หน่วยกิต', 'สอบ', 'เอกสาร', 'อนุมัติ'],
       questions: ['ต้องมีหน่วยกิตเท่าไหร่ถึงจบ?', 'อย่าลืมสอบอะไรบ้าง?'],
-      component: <GraduationWorkflow />
+      component: <GraduationWorkflow />,
     },
     {
       id: 'gened',
-      title: 'GenEd Explorer',
-      desc: 'สำรวจและค้นหาวิชาศึกษาทั่วไป (GenEd) ที่น่าสนใจ',
+      title: 'สำรวจ GenEd',
+      desc: 'ช่วยเลือกวิชาศึกษาทั่วไปให้เข้ากับเวลา ความสนใจ และเป้าหมายของแต่ละปี',
       icon: Maximize2,
-      color: '#8b5cf6',
-      bg: 'rgba(139, 92, 246, 0.1)',
-      questions: ['ลง GenEd หมวดไหนดี?', 'วิชาไหนได้เกรดง่าย? (รีวิว)'],
-      component: <GenEdExplorer courseIndex={courseIndex} />
+      color: '#7c3aed',
+      bg: 'rgba(124, 58, 237, 0.1)',
+      mode: 'General Education',
+      signal: 'GenEd',
+      cta: 'สำรวจ GenEd',
+      preview: ['ภาษา', 'สังคม', 'สุขภาพ', 'เลือกเสรี'],
+      questions: ['ลง GenEd หมวดไหนดี?', 'วิชาไหนเหมาะกับเทอมงานหนัก?'],
+      component: <GenEdExplorer courseIndex={courseIndex} />,
     },
     {
       id: 'workload',
-      title: 'Workload Heatmap',
-      desc: 'คาดการณ์ความหนักของการเรียนในแต่ละเทอม',
+      title: 'Heatmap ความหนัก',
+      desc: 'ประเมินความแน่นของแต่ละเทอมจากจำนวนวิชา หน่วยกิต และชนิดของงานที่ต้องเจอ',
       icon: Activity,
-      color: '#14b8a6',
-      bg: 'rgba(20, 184, 166, 0.1)',
+      color: '#0f766e',
+      bg: 'rgba(15, 118, 110, 0.1)',
+      mode: 'Load Monitor',
+      signal: 'Workload',
+      cta: 'ดู workload',
+      preview: ['เบา', 'กลาง', 'หนัก', 'เสี่ยงล้น'],
       questions: ['เทอมไหนงานหนักสุด?', 'ควรแบ่งเวลายังไง?'],
-      component: <WorkloadHeatmap courseIndex={courseIndex} />
-    }
+      component: <WorkloadHeatmap courseIndex={courseIndex} />,
+    },
   ];
 
   if (activeMap) {
-    const map = maps.find(m => m.id === activeMap);
+    const map = maps.find((item) => item.id === activeMap);
     if (!map) return null;
+    const Icon = map.icon;
 
     return (
-      <div className="page" style={{ padding: '0 24px 64px', maxWidth: '1440px', margin: '0 auto' }}>
-        <button 
-          onClick={() => setActiveMap(null)}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '999px', cursor: 'pointer', fontWeight: 600, color: 'var(--text)', marginBottom: '32px', transition: 'all 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.background = 'var(--surface-hover)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'var(--surface)'}
-        >
-          <ArrowLeft size={18} /> กลับไปหน้ารวมแผนภาพ
+      <div
+        className="page visual-map-detail"
+        style={{ '--map-color': map.color, '--map-bg': map.bg } as CSSProperties}
+      >
+        <button type="button" className="map-back-button" onClick={() => setActiveMap(null)}>
+          <ArrowLeft size={18} aria-hidden="true" />
+          กลับไปหน้ารวมแผนภาพ
         </button>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, margin: '0 0 12px 0', color: map.color }}>{map.title}</h1>
-          <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', margin: 0 }}>{map.desc}</p>
-        </div>
-        <ErrorBoundary name={map.title} fallback={<VisualFallback />}>
-          {map.component}
-        </ErrorBoundary>
+
+        <section className="active-map-shell">
+          <header className="active-map-header">
+            <div className="active-map__icon">
+              <Icon size={26} aria-hidden="true" />
+            </div>
+            <div>
+              <span>{map.mode}</span>
+              <h1>{map.title}</h1>
+              <p>{map.desc}</p>
+            </div>
+            <div className="active-map__signal">
+              <strong>{map.signal}</strong>
+              <small>focus signal</small>
+            </div>
+          </header>
+
+          <div className="active-map-prompts" aria-label="คำถามที่แผนภาพนี้ช่วยตอบ">
+            {map.questions.map((question) => (
+              <span key={question}>{question}</span>
+            ))}
+          </div>
+
+          <div className="active-map-canvas">
+            <ErrorBoundary name={map.title} fallback={<VisualFallback />}>
+              {map.component}
+            </ErrorBoundary>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="page visual-maps-page" style={{ padding: '0 24px 64px', maxWidth: '1200px', margin: '0 auto' }}>
-      <SectionHeader 
-        title="แผนภาพรวมหลักสูตร" 
-        description="แกลเลอรีแผนภาพอินเทอร์แอคทีฟ ช่วยตอบทุกคำถามเกี่ยวกับการวางแผนการเรียน"
-        variant="hero"
-      />
-      
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px', marginTop: '32px' }}>
-        <AnimatePresence>
-          {maps.map((map, i) => (
-            <motion.div
-              key={map.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              whileHover={{ y: -4 }}
-            >
-              <MotionCard style={{ height: '100%', display: 'flex', flexDirection: 'column', cursor: 'pointer', padding: '0' }} onClick={() => setActiveMap(map.id)}>
-                <div style={{ padding: '24px', flexGrow: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: map.bg, color: map.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <map.icon size={24} />
-                    </div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>{map.title}</h2>
+    <div className="page visual-maps-page">
+      <section className="visual-command" aria-label="Visual maps command center">
+        <div className="visual-command__copy">
+          <span className="technical-label">Visual Maps</span>
+          <h1>แผนภาพหลักสูตรแบบ Control Center</h1>
+          <p>
+            ไม่ต้องเดาหลักสูตรจากตารางยาว ๆ หน้านี้รวมแผนภาพที่ช่วยอ่าน 4 ปี, วิชาตัวต่อ, workload,
+            GenEd และเงื่อนไขก่อนจบในมุมเดียว
+          </p>
+          <div className="visual-command__actions">
+            <button type="button" className="primary-button" onClick={() => setActiveMap('grid')}>
+              เริ่มจากแผน 4 ปี
+              <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <button type="button" className="secondary-button" onClick={() => setActiveMap('prereq')}>
+              ตรวจวิชาตัวต่อ
+            </button>
+          </div>
+        </div>
+
+        <aside className="visual-command-canvas" aria-label="ตัวอย่างภาพรวมหลักสูตร">
+          <div className="visual-canvas__toolbar">
+            <span>ECPE Curriculum OS</span>
+            <strong>READY</strong>
+          </div>
+          <div className="visual-canvas__network" aria-hidden="true">
+            <span className="visual-node visual-node--core">138 credits</span>
+            <span className="visual-node visual-node--math">Math Chain</span>
+            <span className="visual-node visual-node--code">Programming</span>
+            <span className="visual-node visual-node--risk">Risk Path</span>
+            <span className="visual-node visual-node--career">Career Output</span>
+          </div>
+          <div className="visual-canvas__panel">
+            <div>
+              <Sparkles size={18} aria-hidden="true" />
+              <span>แผนภาพที่ใช้งานได้จริง</span>
+            </div>
+            <p>เลือก map ตามคำถามที่มี แล้วกดเข้าไปสำรวจข้อมูลจริงของหลักสูตร</p>
+          </div>
+        </aside>
+      </section>
+
+      <section className="visual-map-summary" aria-label="สรุปชุดแผนภาพ">
+        <div>
+          <strong>{maps.length}</strong>
+          <span>โหมดแผนภาพ</span>
+        </div>
+        <div>
+          <strong>{catalogCount}</strong>
+          <span>รายวิชาใน catalog</span>
+        </div>
+        <div>
+          <strong>4</strong>
+          <span>ปีการศึกษา</span>
+        </div>
+        <div>
+          <strong>1</strong>
+          <span>เส้นทางก่อนจบ</span>
+        </div>
+      </section>
+
+      <section className="map-gallery" aria-label="แกลเลอรีแผนภาพ">
+        <div className="map-gallery-header">
+          <div>
+            <span className="technical-label">Map Gallery</span>
+            <h2>เลือกแผนภาพตามโจทย์ที่อยากตอบ</h2>
+          </div>
+          <p>แต่ละการ์ดมี signal, preview และคำถามนำทาง เพื่อให้รู้ทันทีว่าควรเปิดเครื่องมือไหน</p>
+        </div>
+
+        <div className="map-gallery-grid">
+          <AnimatePresence>
+            {maps.map((map, index) => {
+              const Icon = map.icon;
+              return (
+                <motion.button
+                  type="button"
+                  key={map.id}
+                  className="map-showcase-card"
+                  style={{ '--map-color': map.color, '--map-bg': map.bg } as CSSProperties}
+                  onClick={() => setActiveMap(map.id)}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.04 }}
+                  whileHover={{ y: -4 }}
+                >
+                  <div className="map-card__top">
+                    <span className="map-card__icon">
+                      <Icon size={24} aria-hidden="true" />
+                    </span>
+                    <span className="map-card__mode">{map.mode}</span>
                   </div>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '24px' }}>{map.desc}</p>
-                  
-                  <div style={{ background: 'var(--surface-muted)', padding: '16px', borderRadius: '12px' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px', letterSpacing: '0.05em' }}>ช่วยตอบคำถาม:</div>
-                    <ul style={{ margin: 0, paddingLeft: '20px', color: 'var(--text)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {map.questions.map((q, idx) => (
-                        <li key={idx}>{q}</li>
+
+                  <div className="map-card__body">
+                    <h3>{map.title}</h3>
+                    <p>{map.desc}</p>
+                  </div>
+
+                  <div className="map-card__preview" aria-hidden="true">
+                    <div className="map-card__preview-line" />
+                    {map.preview.map((item) => (
+                      <span key={item}>{item}</span>
+                    ))}
+                  </div>
+
+                  <div className="map-card__questions">
+                    <strong>ช่วยตอบคำถาม</strong>
+                    <ul>
+                      {map.questions.map((question) => (
+                        <li key={question}>{question}</li>
                       ))}
                     </ul>
                   </div>
-                </div>
-                <div style={{ padding: '16px 24px', background: map.bg, borderTop: `1px solid rgba(0,0,0,0.05)`, color: map.color, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  เปิดใช้งานแผนภาพ
-                  <ArrowRight size={18} />
-                </div>
-              </MotionCard>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+
+                  <div className="map-card__footer">
+                    <span>
+                      <Layers3 size={16} aria-hidden="true" />
+                      {map.signal}
+                    </span>
+                    <strong>
+                      {map.cta}
+                      <ArrowRight size={17} aria-hidden="true" />
+                    </strong>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      </section>
     </div>
   );
 }

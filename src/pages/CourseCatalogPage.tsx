@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import type { Course } from '../types/course';
 import type { CourseIndex } from '../utils/courseIndex';
 
@@ -6,11 +6,68 @@ import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { Badge } from '../components/common/Badge';
 import { EmptyState } from '../components/common/EmptyState';
 import { SearchBox } from '../components/common/SearchBox';
-import { SectionHeader } from '../components/common/SectionHeader';
 import { SourceBadge } from '../components/common/SourceBadge';
 import { useCourseModal } from '../components/common/CourseModalProvider';
+import {
+  AlertTriangle,
+  BookOpen,
+  Grid2X2,
+  List,
+  Network,
+  PanelRightOpen,
+  ShieldAlert,
+  SlidersHorizontal,
+} from 'lucide-react';
 
 type SortMode = 'code' | 'year' | 'name';
+type ViewMode = 'grid' | 'list';
+
+const typeLabels: Record<string, string> = {
+  required: 'วิชาแกน',
+  'general-education': 'ศึกษาทั่วไป',
+  'major-elective': 'เลือกเฉพาะ',
+  'free-elective': 'เลือกเสรี',
+  'non-credit': 'ไม่นับหน่วยกิต',
+};
+
+function getTypeLabel(type?: string) {
+  if (!type) return 'ไม่ระบุประเภท';
+  return typeLabels[type] || type;
+}
+
+function getTypeStyle(course: Course): CSSProperties {
+  const type = course.type || '';
+  if (course.dangerousToFail) {
+    return {
+      '--course-accent': 'var(--danger)',
+      '--course-bg': 'rgba(225, 29, 72, 0.065)',
+      '--course-border': 'rgba(225, 29, 72, 0.28)',
+    } as CSSProperties;
+  }
+  if (type === 'general-education') {
+    return {
+      '--course-accent': 'var(--violet)',
+      '--course-bg': 'rgba(109, 40, 217, 0.055)',
+      '--course-border': 'rgba(109, 40, 217, 0.22)',
+    } as CSSProperties;
+  }
+  if (type === 'major-elective' || type === 'free-elective') {
+    return {
+      '--course-accent': 'var(--orange)',
+      '--course-bg': 'rgba(255, 158, 87, 0.08)',
+      '--course-border': 'rgba(255, 158, 87, 0.26)',
+    } as CSSProperties;
+  }
+  return {
+    '--course-accent': 'var(--cyan)',
+    '--course-bg': 'rgba(8, 145, 178, 0.055)',
+    '--course-border': 'rgba(8, 145, 178, 0.22)',
+  } as CSSProperties;
+}
+
+function getCourseTitle(course: Course) {
+  return course.nameTh || course.titleTh || course.title || course.nameEn || course.id;
+}
 
 export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex }) {
   const [query, setQuery] = useState('');
@@ -20,76 +77,119 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
   const [career, setCareer] = useState('all');
   const [dangerOnly, setDangerOnly] = useState(false);
   const [sort, setSort] = useState<SortMode>('code');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>(window.innerWidth > 768 ? 'list' : 'grid');
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    typeof window !== 'undefined' && window.innerWidth > 768 ? 'list' : 'grid',
+  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const debouncedQuery = useDebouncedValue(query);
   const { openCourse } = useCourseModal();
   const careerOptions = Array.from(new Set(courseIndex.courses.flatMap((course) => course.careerPaths || []))).sort();
-  const categoryOptions = Array.from(new Set(courseIndex.courses.map((course) => course.category).filter((item): item is string => Boolean(item)))).sort();
+  const categoryOptions = Array.from(
+    new Set(courseIndex.courses.map((course) => course.category).filter((item): item is string => Boolean(item))),
+  ).sort();
 
   const filtered = useMemo(() => {
-    // 1. Get base catalog courses (excluding placeholders & unknowns)
     let baseCourses = courseIndex.getCatalogCourses();
-    
-    // 2. Filter by search query using fuse.js from courseIndex
+
     if (debouncedQuery.trim()) {
       const searchResults = courseIndex.searchCourses(debouncedQuery);
-      const matchedIds = new Set(searchResults.map(res => res.course.id));
-      baseCourses = baseCourses.filter(c => matchedIds.has(c.id));
+      const matchedIds = new Set(searchResults.map((result) => result.course.id));
+      baseCourses = baseCourses.filter((course) => matchedIds.has(course.id));
     }
 
-    // 3. Apply other filters
     const result = baseCourses.filter((course) => {
       const matchType = type === 'all' || course.type === type;
-      const matchSource = source === 'all' || course.sourceConfidence === source || (source === 'needs' && (course.needsVerification || course.sourceConfidence === 'needs-verification'));
+      const matchSource =
+        source === 'all' ||
+        course.sourceConfidence === source ||
+        (source === 'needs' && (course.needsVerification || course.sourceConfidence === 'needs-verification'));
       const matchCategory = category === 'all' || course.category === category;
       const matchCareer = career === 'all' || course.careerPaths?.includes(career);
       const matchDanger = !dangerOnly || course.dangerousToFail;
       return matchType && matchSource && matchCategory && matchCareer && matchDanger;
     });
 
-    // 4. Sort
     return result.sort((a, b) => {
-      if (sort === 'year') return Number(a.year || 99) - Number(b.year || 99) || String(a.code || '').localeCompare(String(b.code || ''));
-      if (sort === 'name') return String(a.nameTh || a.nameEn || '').localeCompare(String(b.nameTh || b.nameEn || ''), 'th');
+      if (sort === 'year') {
+        return Number(a.year || 99) - Number(b.year || 99) || String(a.code || '').localeCompare(String(b.code || ''));
+      }
+      if (sort === 'name') {
+        return String(a.nameTh || a.nameEn || '').localeCompare(String(b.nameTh || b.nameEn || ''), 'th');
+      }
       return String(a.code || '').localeCompare(String(b.code || ''));
     });
   }, [career, category, courseIndex, dangerOnly, debouncedQuery, sort, source, type]);
 
-  const catalogCourses = useMemo(() => courseIndex.getCatalogCourses(), [courseIndex]);
+  useEffect(() => {
+    if (!filtered.length) {
+      if (selectedId) setSelectedId(null);
+      return;
+    }
+    if (!selectedId || !filtered.some((course) => course.id === selectedId)) {
+      setSelectedId(filtered[0].id);
+    }
+  }, [filtered, selectedId]);
 
-  const stats = {
-    all: catalogCourses.length,
-    gened: catalogCourses.filter((course) => course.type === 'general-education').length,
-    required: catalogCourses.filter((course) => course.type === 'required').length,
-    elective: catalogCourses.filter((course) => course.type === 'major-elective').length,
-    needs: catalogCourses.filter((course) => course.needsVerification || course.sourceConfidence === 'needs-verification').length,
+  const catalogCourses = useMemo(() => courseIndex.getCatalogCourses(), [courseIndex]);
+  const selectedCourse = filtered.find((course) => course.id === selectedId) || filtered[0] || null;
+
+  const stats = [
+    { label: 'ทั้งหมด', value: catalogCourses.length, tone: 'primary' },
+    { label: 'วิชาแกน', value: catalogCourses.filter((course) => course.type === 'required').length, tone: 'cyan' },
+    {
+      label: 'ศึกษาทั่วไป',
+      value: catalogCourses.filter((course) => course.type === 'general-education').length,
+      tone: 'violet',
+    },
+    {
+      label: 'วิชาเลือก',
+      value: catalogCourses.filter((course) => course.type === 'major-elective').length,
+      tone: 'orange',
+    },
+    { label: 'ห้ามพลาด', value: catalogCourses.filter((course) => course.dangerousToFail).length, tone: 'danger' },
+  ];
+
+  const getCourseRefLabel = (ref: string) => {
+    const found = courseIndex.findCourse(ref);
+    return found ? `${found.code || ref} ${getCourseTitle(found)}` : ref;
   };
 
   return (
-    <div className="page">
-      <SectionHeader 
-        title="รายวิชาทั้งหมด" 
-        description="ค้นหา ดูรายละเอียด และตรวจสอบความเชื่อมโยงของทุกรายวิชาในหลักสูตรวิศวกรรมคอมพิวเตอร์"
-        variant="hero"
-      />
-      <div className="catalog-stats" style={{ gap: '12px' }}>
-        {Object.entries(stats).map(([label, value]) => {
-          const thaiLabels: Record<string, string> = {
-            all: 'ทั้งหมด',
-            gened: 'ศึกษาทั่วไป',
-            required: 'วิชาบังคับ',
-            elective: 'วิชาเลือก',
-            needs: 'รอตรวจสอบ'
-          };
-          return (
-          <div key={label} style={{ background: 'var(--surface)', backdropFilter: 'blur(12px)', border: '1px solid var(--border)', borderRadius: '16px', padding: '20px' }}>
-            <strong style={{ fontSize: '2rem', color: label === 'gened' ? 'var(--violet)' : label === 'elective' ? 'var(--warning)' : label === 'required' ? 'var(--cyan)' : 'var(--primary)' }}>{value}</strong>
-            <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{thaiLabels[label] || label}</span>
+    <div className="page course-catalog-page">
+      <section className="course-catalog-hero" aria-label="Course catalog overview">
+        <div>
+          <span className="technical-label">Course Explorer</span>
+          <h1>รายวิชาทั้งหมดในมุมมองแบบ Data Explorer</h1>
+          <p>
+            ค้นหา กรอง และไล่ดูรายวิชาโดยไม่หลุด context เลือกรายการด้านซ้ายแล้วอ่านรายละเอียดสำคัญใน inspector
+            ด้านขวา ก่อนเปิดรายละเอียดเต็มเมื่อจำเป็น
+          </p>
+        </div>
+        <aside className="course-hero-panel" aria-label="Catalog signal">
+          <div>
+            <BookOpen size={22} aria-hidden="true" />
+            <span>Catalog Signal</span>
           </div>
-        )})}
-      </div>
-      <div className="catalog-toolbar">
-        <SearchBox value={query} onChange={setQuery} />
+          <strong>{filtered.length}</strong>
+          <p>รายวิชาที่ตรงกับตัวกรองปัจจุบัน</p>
+        </aside>
+      </section>
+
+      <section className="catalog-stats course-stats-strip" aria-label="สถิติรายวิชา">
+        {stats.map((stat) => (
+          <div key={stat.label} data-tone={stat.tone}>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </section>
+
+      <section className="catalog-toolbar course-filter-toolbar" aria-label="ตัวกรองรายวิชา">
+        <SearchBox
+          value={query}
+          onChange={setQuery}
+          placeholder="ค้นหารหัสวิชา ชื่อวิชา หมวด หรือ career path"
+        />
         <select value={type} onChange={(event) => setType(event.target.value)} aria-label="filter type">
           <option value="all">ทุกประเภท</option>
           <option value="required">วิชาแกนบังคับ</option>
@@ -98,71 +198,231 @@ export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex })
           <option value="non-credit">ไม่นับหน่วยกิต</option>
         </select>
         <select value={source} onChange={(event) => setSource(event.target.value)} aria-label="filter source">
-          <option value="all">ทุก source</option>
-          <option value="verified-official">ข้อมูลทางการ (มคอ.2)</option>
-          <option value="verified-description">คำอธิบายรายวิชา (ตรวจสอบแล้ว)</option>
-          <option value="needs">รอการตรวจสอบ</option>
+          <option value="all">ทุกแหล่งอ้างอิง</option>
+          <option value="verified-official">ข้อมูลทางการ</option>
+          <option value="verified-description">คำอธิบายตรวจแล้ว</option>
+          <option value="needs">รอตรวจสอบ</option>
         </select>
         <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="filter category">
           <option value="all">ทุกหมวด</option>
-          {categoryOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+          {categoryOptions.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
         </select>
         <select value={career} onChange={(event) => setCareer(event.target.value)} aria-label="filter career">
           <option value="all">ทุก career path</option>
-          {careerOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+          {careerOptions.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
         </select>
         <select value={sort} onChange={(event) => setSort(event.target.value as SortMode)} aria-label="sort">
-          <option value="code">เรียงตาม code</option>
+          <option value="code">เรียงตามรหัส</option>
           <option value="year">เรียงตามปี</option>
           <option value="name">เรียงตามชื่อ</option>
         </select>
-        <label className="inline-check"><input type="checkbox" checked={dangerOnly} onChange={(event) => setDangerOnly(event.target.checked)} /> ห้ามติด F</label>
-        <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-          <button onClick={() => setViewMode('list')} style={{ padding: '8px', background: viewMode === 'list' ? 'var(--primary)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--text-muted)', border: '1px solid', borderColor: viewMode === 'list' ? 'var(--primary)' : 'var(--border)', borderRadius: '8px', cursor: 'pointer' }}>List</button>
-          <button onClick={() => setViewMode('grid')} style={{ padding: '8px', background: viewMode === 'grid' ? 'var(--primary)' : 'transparent', color: viewMode === 'grid' ? 'white' : 'var(--text-muted)', border: '1px solid', borderColor: viewMode === 'grid' ? 'var(--primary)' : 'var(--border)', borderRadius: '8px', cursor: 'pointer' }}>Grid</button>
+        <label className="inline-check catalog-danger-toggle">
+          <input type="checkbox" checked={dangerOnly} onChange={(event) => setDangerOnly(event.target.checked)} />
+          <ShieldAlert size={17} aria-hidden="true" />
+          ห้ามพลาด
+        </label>
+        <div className="catalog-view-toggle" aria-label="เลือกมุมมอง">
+          <button
+            type="button"
+            className={viewMode === 'list' ? 'is-active' : ''}
+            onClick={() => setViewMode('list')}
+            aria-label="มุมมอง list"
+            title="List view"
+          >
+            <List size={18} aria-hidden="true" />
+            List
+          </button>
+          <button
+            type="button"
+            className={viewMode === 'grid' ? 'is-active' : ''}
+            onClick={() => setViewMode('grid')}
+            aria-label="มุมมอง grid"
+            title="Grid view"
+          >
+            <Grid2X2 size={18} aria-hidden="true" />
+            Grid
+          </button>
         </div>
-      </div>
-      {filtered.length === 0 ? <EmptyState title="ไม่พบรายวิชา" /> : null}
-      
-      <div className={viewMode === 'grid' ? "course-card-grid" : "course-list"} style={viewMode === 'list' ? { display: 'flex', flexDirection: 'column', gap: '12px' } : undefined}>
-        {filtered.map((course: Course) => {
-          let bg = 'var(--surface)';
-          let border = 'var(--border)';
-          if (course.type === 'general-education') { bg = 'rgba(139, 92, 246, 0.05)'; border = 'rgba(139, 92, 246, 0.3)'; }
-          else if (course.type === 'required') { bg = 'rgba(6, 182, 212, 0.05)'; border = 'rgba(6, 182, 212, 0.3)'; }
-          else if (course.type === 'major-elective') { bg = 'rgba(245, 158, 11, 0.05)'; border = 'rgba(245, 158, 11, 0.3)'; }
-          else if (course.type === 'free-elective') { bg = 'rgba(236, 72, 153, 0.05)'; border = 'rgba(236, 72, 153, 0.3)'; }
+      </section>
 
-          if (viewMode === 'list') {
-            return (
-              <button type="button" className="course-list-item" key={course.id} onClick={() => openCourse(course)} style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', background: bg, border: `1px solid ${border}`, borderRadius: '12px', padding: '16px', textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(4px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(0)'}>
-                <span className="course-code" style={{ padding: '6px 12px', background: 'rgba(79, 124, 255, 0.1)', color: 'var(--primary-strong)', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700, minWidth: '85px', textAlign: 'center' }}>{course.code || 'TBD'}</span>
-                <div style={{ flexGrow: 1 }}>
-                  <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: 'var(--text)' }}>{course.nameTh || course.nameEn}</h3>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{course.nameTh ? course.nameEn : ''}</p>
-                </div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <Badge tone="soft">{course.credits || 'TBD'} Cr.</Badge>
-                  {course.dangerousToFail ? <Badge tone="danger">ห้ามพลาด</Badge> : null}
-                  <SourceBadge course={course} />
-                </div>
-              </button>
-            );
-          }
+      <div className="course-explorer-layout">
+        <section className="course-results-panel" aria-label="ผลลัพธ์รายวิชา">
+          <div className="course-results-panel__header">
+            <div>
+              <SlidersHorizontal size={18} aria-hidden="true" />
+              <span>{filtered.length} รายการ</span>
+            </div>
+            <small>กดรายวิชาเพื่ออัปเดต inspector</small>
+          </div>
 
-          return (
-            <button type="button" className="course-card" key={course.id} onClick={() => openCourse(course)} style={{ display: 'flex', flexDirection: 'column', height: '100%', background: bg, backdropFilter: 'blur(12px)', border: `1px solid ${border}`, borderRadius: '20px', padding: '20px' }}>
-              <span className="course-code" style={{ padding: '4px 10px', background: 'rgba(79, 124, 255, 0.1)', color: 'var(--primary-strong)', borderRadius: '8px', fontSize: '0.9rem', marginBottom: '12px', alignSelf: 'flex-start' }}>{course.code || 'TBD'}</span>
-              <h3 style={{ margin: '0 0 4px 0', fontSize: '1.15rem', color: 'var(--text)', textAlign: 'left' }}>{course.nameTh}</h3>
-              <p style={{ margin: '0 0 20px 0', fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'left', flexGrow: 1 }}>{course.nameEn}</p>
-              <div className="badge-row" style={{ marginTop: 'auto', paddingTop: '16px', borderTop: `1px solid ${border}`, width: '100%' }}>
-                <Badge tone="soft">{course.credits || 'TBD'}</Badge>
-                {course.dangerousToFail ? <Badge tone="danger">ห้ามพลาด</Badge> : null}
-                <SourceBadge course={course} />
+          {filtered.length === 0 ? <EmptyState title="ไม่พบรายวิชา" /> : null}
+
+          <div className={viewMode === 'grid' ? 'course-card-grid course-card-grid--catalog' : 'course-data-list'}>
+            {filtered.map((course: Course) => {
+              const isSelected = selectedCourse?.id === course.id;
+              const prereqCount = course.prerequisites?.length || course.officialPrerequisites?.length || 0;
+              const unlockCount = course.prerequisiteOf?.length || course.officialPrerequisiteOf?.length || 0;
+
+              if (viewMode === 'list') {
+                return (
+                  <button
+                    type="button"
+                    className={`course-row ${isSelected ? 'is-selected' : ''}`}
+                    key={course.id}
+                    onClick={() => setSelectedId(course.id)}
+                    style={getTypeStyle(course)}
+                  >
+                    <span className="course-row__code">{course.code || 'TBD'}</span>
+                    <span className="course-row__title">
+                      <strong>{getCourseTitle(course)}</strong>
+                      <small>{course.nameEn || getTypeLabel(course.type)}</small>
+                    </span>
+                    <span className="course-row__meta">
+                      <span>{course.credits || 'TBD'} Cr.</span>
+                      <span>{getTypeLabel(course.type)}</span>
+                      {course.year ? <span>ปี {course.year}</span> : null}
+                    </span>
+                    <span className="course-row__signals">
+                      {prereqCount ? (
+                        <span>
+                          <Network size={14} aria-hidden="true" />
+                          ก่อนเรียน {prereqCount}
+                        </span>
+                      ) : null}
+                      {unlockCount ? <span>ปลดล็อก {unlockCount}</span> : null}
+                      {course.dangerousToFail ? (
+                        <span className="is-danger">
+                          <AlertTriangle size={14} aria-hidden="true" />
+                          ห้ามพลาด
+                        </span>
+                      ) : null}
+                    </span>
+                  </button>
+                );
+              }
+
+              return (
+                <button
+                  type="button"
+                  className={`course-card catalog-course-card ${isSelected ? 'is-selected' : ''}`}
+                  key={course.id}
+                  onClick={() => setSelectedId(course.id)}
+                  style={getTypeStyle(course)}
+                >
+                  <span className="course-code">{course.code || 'TBD'}</span>
+                  <h3>{getCourseTitle(course)}</h3>
+                  <p>{course.nameEn || course.description || getTypeLabel(course.type)}</p>
+                  <div className="badge-row">
+                    <Badge tone="soft">{course.credits || 'TBD'} Cr.</Badge>
+                    {course.dangerousToFail ? <Badge tone="danger">ห้ามพลาด</Badge> : null}
+                    <SourceBadge course={course} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <aside className="course-inspector" aria-label="Course inspector">
+          {selectedCourse ? (
+            <>
+              <div className="course-inspector__header">
+                <span>
+                  <PanelRightOpen size={18} aria-hidden="true" />
+                  Course Inspector
+                </span>
+                <strong>{selectedCourse.code || 'TBD'}</strong>
               </div>
-            </button>
-          );
-        })}
+
+              <div className="course-inspector__title">
+                <h2>{getCourseTitle(selectedCourse)}</h2>
+                <p>{selectedCourse.nameEn || selectedCourse.description || 'ไม่มีคำอธิบายภาษาอังกฤษในชุดข้อมูล'}</p>
+              </div>
+
+              <div className="course-inspector__badges">
+                <Badge tone="soft">{selectedCourse.credits || 'TBD'} หน่วยกิต</Badge>
+                <Badge>{getTypeLabel(selectedCourse.type)}</Badge>
+                {selectedCourse.category ? <Badge tone="soft">{selectedCourse.category}</Badge> : null}
+                <SourceBadge course={selectedCourse} />
+              </div>
+
+              {selectedCourse.dangerousToFail ? (
+                <div className="course-inspector__risk">
+                  <AlertTriangle size={18} aria-hidden="true" />
+                  วิชานี้เป็นจุดเสี่ยงของแผนการเรียน ควรตรวจวิชาตัวต่อก่อนตัดสินใจถอนหรือลงช้า
+                </div>
+              ) : null}
+
+              <div className="course-inspector__metrics">
+                <div>
+                  <strong>{selectedCourse.prerequisites?.length || selectedCourse.officialPrerequisites?.length || 0}</strong>
+                  <span>ต้องผ่านก่อน</span>
+                </div>
+                <div>
+                  <strong>{selectedCourse.prerequisiteOf?.length || selectedCourse.officialPrerequisiteOf?.length || 0}</strong>
+                  <span>วิชาที่ปลดล็อก</span>
+                </div>
+                <div>
+                  <strong>{selectedCourse.careerPaths?.length || 0}</strong>
+                  <span>career path</span>
+                </div>
+              </div>
+
+              <section>
+                <h3>คำอธิบายย่อ</h3>
+                <p>{selectedCourse.description || selectedCourse.whyItMatters || 'ยังไม่มีคำอธิบายเพิ่มเติม'}</p>
+              </section>
+
+              <section>
+                <h3>วิชาที่เกี่ยวข้อง</h3>
+                <div className="course-inspector__list">
+                  <span>ต้องผ่านก่อน</span>
+                  <p>
+                    {(selectedCourse.prerequisites || selectedCourse.officialPrerequisites || [])
+                      .map(getCourseRefLabel)
+                      .join(' / ') || selectedCourse.officialPrerequisiteText || 'ไม่มี'}
+                  </p>
+                </div>
+                <div className="course-inspector__list">
+                  <span>เป็นตัวต่อให้</span>
+                  <p>
+                    {(selectedCourse.prerequisiteOf || selectedCourse.officialPrerequisiteOf || [])
+                      .map(getCourseRefLabel)
+                      .join(' / ') || 'ไม่มี'}
+                  </p>
+                </div>
+              </section>
+
+              {selectedCourse.careerPaths?.length ? (
+                <section>
+                  <h3>Career relevance</h3>
+                  <div className="badge-row">
+                    {selectedCourse.careerPaths.slice(0, 6).map((path) => (
+                      <Badge key={path} tone="verified">
+                        {path}
+                      </Badge>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              <button type="button" className="primary-button course-inspector__action" onClick={() => openCourse(selectedCourse)}>
+                เปิดรายละเอียดเต็ม
+                <PanelRightOpen size={18} aria-hidden="true" />
+              </button>
+            </>
+          ) : (
+            <EmptyState title="ยังไม่ได้เลือกรายวิชา" />
+          )}
+        </aside>
       </div>
     </div>
   );
