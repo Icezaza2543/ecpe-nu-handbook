@@ -595,9 +595,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
     );
   }, [semesters]);
 
-  const keyCourseCodes = useMemo(() => new Set(
-    officialPlanEdges.flatMap(edge => [edge.from, edge.to])
-  ), [officialPlanEdges]);
+
 
   // Group Courses to maintain 2-line maximum (disabled to match exactly one line per requirement)
   const compactSemesterCourses = (courses: StudyCourse[]) => {
@@ -830,7 +828,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
             {semesters.map((sem) => {
               const isSummer = (sem.semester === 'ฤดูร้อน') || (sem.title || '').includes('Summer') || (sem.title || '').includes('ฤดูร้อน');
               const coursesToRender = compactSemesterCourses(sem.courses || []);
-              const sortedCourses = sortPosterCourses(sem.id, coursesToRender);
+              const sortedCourses = sortPosterCourses(sem.id || '', coursesToRender);
               
               const isLongBar = isSummer && sortedCourses.length <= 2;
 
