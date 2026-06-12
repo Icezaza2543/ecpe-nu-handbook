@@ -1,102 +1,89 @@
-<div align="center">
-  <!-- เปลี่ยน path รูปโลโก้เป็นลิงก์ภาพ หรือ SVG จริงในโปรเจกต์เพื่อให้แสดงผลได้สวยงาม -->
-  <img src="public/favicon.svg" alt="ECPE NU Logo" width="120" />
+# ECPE NU Freshman Handbook
 
-  <h1>🚀 ECPE NU Freshman Handbook</h1>
-  
-  <p>
-    <b>คู่มือไม่เป็นทางการสำหรับนิสิตวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยนเรศวร</b>
-  </p>
-  
-  <p>
-    รวบรวมข้อมูล หลักสูตร แผนการเรียน และเส้นทางสายอาชีพสำหรับนิสิตใหม่<br/>
-    ออกแบบมาให้ใช้งานง่าย ครบจบในที่เดียว ด้วยประสบการณ์ระดับ <b>Premium UX/UI</b>
-  </p>
+คู่มือไม่เป็นทางการสำหรับนิสิตวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยนเรศวร
 
-  <div>
-    <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-    <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-    <a href="https://icezaza2543.github.io/ecpe-nu-handbook/">
-      <img src="https://img.shields.io/badge/Deploy-GitHub%20Pages-success?style=for-the-badge&logo=github" alt="Deploy status" />
-    </a>
-  </div>
-  
-  <br/>
+โปรเจกต์นี้รวมข้อมูลหลักสูตร แผนการเรียน วิชาบังคับก่อน สายอาชีพ เครื่องมือ แหล่งเรียนรู้ FAQ และคำแนะนำจากรุ่นพี่ไว้ในเว็บเดียว โดยออกแบบให้เป็น Handbook ที่อ่านง่าย ใช้งานจริงได้ และเหมาะกับนิสิตปี 1 ที่ต้องเริ่มวางแผน 4 ปีตั้งแต่เนิ่น ๆ
 
-  <a href="https://icezaza2543.github.io/ecpe-nu-handbook/"><b>✨ ดูเว็บไซต์จริง (Live Demo)</b></a> | 
-  <a href="https://github.com/icezaza2543/ecpe-nu-handbook/issues"><b>🐞 แจ้งปัญหา</b></a> | 
-  <a href="https://github.com/icezaza2543/ecpe-nu-handbook/pulls"><b>💡 เสนอไอเดีย</b></a>
+## Features
 
-</div>
+- Visual Maps สำหรับดูแผน 4 ปี วิชาตัวต่อ workload GenEd และเงื่อนไขก่อนจบ
+- Course Catalog ที่ค้นหา กรอง และเปิดรายละเอียดรายวิชาได้
+- Dependency Graph สำหรับสำรวจ prerequisite และผลกระทบของวิชาตัวต่อ
+- Career Roadmaps แบบ skill tree พร้อมรายวิชา เครื่องมือ และไอเดีย portfolio
+- Tools & Sources รวมเครื่องมือ แหล่งเรียนรู้ และ skill gap นอกห้องเรียน
+- Survival Guide, FAQ, Senior Tips และ Credits
+- Route aliases และ fallback สำหรับ path ที่พิมพ์ผิดหรือ path เก่าจาก `/ecpe-nu-handbook/...`
 
-<hr/>
+## Tech Stack
 
-## ✨ จุดเด่นของโปรเจกต์ (Features)
+| Area | Stack |
+| --- | --- |
+| UI | React 19, TypeScript |
+| Build | Vite 8 |
+| Routing | React Router 7 |
+| Styling | Custom CSS |
+| Icons | lucide-react |
+| Motion | framer-motion |
+| Graphs | @xyflow/react, custom 2D canvas |
+| Search | fuse.js |
+| Validation | zod, Vitest |
+| Deploy target | Vercel-ready SPA |
 
-ออกแบบด้วยแนวคิด **"Dynamic & Interactive"** เพื่อยกระดับการอ่านคู่มือให้ไม่น่าเบื่ออีกต่อไป:
+## Local Development
 
-- 🗺️ **Visual Curriculum Map:** แผนภาพหลักสูตรแบบ Interactive ดูง่ายว่าวิชาไหนเป็นตัวต่อของวิชาไหน
-- 🎓 **Career Roadmaps:** เส้นทางสายอาชีพ (Web Dev, Data Science, DevOps, etc.) พร้อมทักษะที่ควรมี
-- 🧰 **Tools & Stack Guide:** แนะนำเครื่องมือที่ชาว ECPE ต้องใช้ในแต่ละปีแบบจัดเต็ม
-- ⚡ **Lightning Fast:** โหลดเร็วทันใจด้วยขุมพลังของ Vite + React
-- 📱 **Fully Responsive:** สวยงามทุกสัดส่วนหน้าจอ ไม่ว่าจะดูผ่านมือถือ แท็บเล็ต หรือคอมพิวเตอร์
-- 🌙 **Modern UI/UX:** ออกแบบด้วยความใส่ใจในทุกรายละเอียด (Micro-interactions, Smooth animations, Glassmorphism)
-
----
-
-## 🚀 เริ่มต้นใช้งาน (Quick Start)
-
-ถ้าคุณต้องการรันโปรเจกต์นี้บนเครื่องของคุณเอง (Local Development) สามารถทำตามขั้นตอนนี้ได้เลย!
-
-### 1. สิ่งที่ต้องมี (Prerequisites)
-- **Node.js** (เวอร์ชัน 18+ ขึ้นไป)
-- **Git**
-
-### 2. โคลนและรันโปรเจกต์
 ```bash
-# 1. โคลน Repository
-git clone https://github.com/icezaza2543/ecpe-nu-handbook.git
-
-# 2. เข้าไปในโฟลเดอร์โปรเจกต์
-cd ecpe-nu-handbook
-
-# 3. ติดตั้ง Dependencies
 npm install
-
-# 4. รัน Development Server
 npm run dev
 ```
 
-เปิดเบราว์เซอร์ไปที่ `http://localhost:5173` เพื่อดูผลลัพธ์สุดปังได้เลย 🚀
+เปิดเว็บที่ Vite แสดงใน terminal โดยปกติคือ:
 
----
+```text
+http://localhost:5173
+```
 
-## 🛠️ Tech Stack & Architecture
+## Validation
 
-โปรเจกต์นี้สร้างขึ้นด้วยเทคโนโลยีระดับอุตสาหกรรม (Industry Standard) เพื่อให้ง่ายต่อการพัฒนาต่อยอดและบำรุงรักษา:
+ก่อนส่งงานหรือ deploy ควรรัน:
 
-| หมวดหมู่ (Category) | เทคโนโลยี (Technology) | คำอธิบาย (Description) |
-| :--- | :--- | :--- |
-| **Core** | `React 18` | ไลบรารีหลักสำหรับการสร้าง User Interface ที่ไหลลื่น |
-| **Language** | `TypeScript` | เพื่อ Type safety ที่ดี ทรงพลัง และลดบั๊กในการพัฒนา |
-| **Build Tool**| `Vite` | เครื่องมือ Build ตัวตึงที่ Compile โค้ดได้เร็วสุดขีด |
-| **Styling** | `Vanilla CSS` | เขียน Custom CSS เองทั้งหมดผ่าน Design System เพื่อให้ UI สวยขั้นสุดโดยไม่พึ่งพา UI Library สำเร็จรูป |
-| **Deployment**| `GitHub Pages` | โฮสต์เว็บไซต์ฟรี รวดเร็ว และรองรับ CI/CD |
+```bash
+npm run lint
+npm run test
+npm run build
+```
 
----
+สถานะล่าสุด:
 
-## 🤝 การมีส่วนร่วม (Contributing)
+- `npm run lint` ผ่าน
+- `npm run test` ผ่าน
+- `npm run build` ผ่าน
+- Vite ยังเตือนเรื่อง initial chunk เกิน 500 kB ซึ่งเป็น performance warning ไม่ใช่ build failure
 
-โปรเจกต์นี้สร้างขึ้น **"โดยนิสิต เพื่อนิสิต"**! เรายินดีต้อนรับและขอบคุณทุกการมีส่วนร่วม ไม่ว่าจะเป็น:
+## Deployment
 
-- 🐛 **เจอข้อมูลผิดพลาด/พิมพ์ผิด** -> เปิด [Issue](https://github.com/icezaza2543/ecpe-nu-handbook/issues) แจ้งเราได้เลย
-- 🎨 **อยากเพิ่มฟีเจอร์/แก้ไข UI ให้จึ้งกว่าเดิม** -> Fork โปรเจกต์นี้แล้วส่ง [Pull Request](https://github.com/icezaza2543/ecpe-nu-handbook/pulls) มาประชันกันได้เต็มที่!
-- 📝 **อยากแชร์ทริค/ประสบการณ์ของรุ่นพี่** -> สามารถเพิ่มข้อมูลในส่วน Data ไฟล์ต่างๆ และสร้าง PR มาได้เลย
+โปรเจกต์พร้อม deploy บน Vercel จาก root repo:
 
----
+- Build command: `npm run build`
+- Output directory: `dist`
+- SPA rewrite อยู่ใน `vercel.json`
+- Default base path คือ `/`
 
-<div align="center">
-  <p>สร้างสรรค์ด้วย ❤️ สำหรับน้องๆ ชาว <b>ECPE NU</b> ทุกคน</p>
-  <p>© 2026-Present | Unofficial Handbook</p>
-</div>
+ถ้าต้อง deploy บน subpath เช่น GitHub Pages ให้กำหนด env:
+
+```bash
+VITE_BASE_PATH=/ecpe-nu-handbook/
+```
+
+## Project Notes For AI Agents
+
+AI/agent context ถูกรวมไว้ที่ไฟล์เดียว:
+
+```text
+AGENTS.md
+```
+
+ไฟล์นี้เป็น source of truth สำหรับ design direction, routing, deployment, dependency rationale, page contracts และ QA checklist ของโปรเจกต์
+
+## Contributing
+
+โปรเจกต์นี้เป็น unofficial handbook สำหรับช่วยนิสิต ECPE NU หากต้องการช่วยปรับปรุง สามารถเปิด issue หรือส่ง pull request ได้ โดยควรรัน validation commands ก่อนส่งงานทุกครั้ง
