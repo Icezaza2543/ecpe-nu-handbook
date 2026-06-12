@@ -16,23 +16,11 @@ This document outlines the rationale for every dependency in this project, answe
 - **Why it's necessary:** Essential for navigating between pages (Course Catalog, Visual Maps, Career Roadmaps) without reloading the app.
 - **Fallback:** Native `window.location` (but breaks SPA UX, so no fallback needed).
 
-## 3D & Data Visualization
-
-### `three`
-- **What it does:** Core 3D library for WebGL graphics.
-- **Where it's used:** Underlying engine for `@react-three/fiber`.
-- **Why it's necessary:** Renders the 3D visual experiences (like the Course Galaxy/Hero elements).
-- **Fallback:** Yes, via `VisualFallback.tsx` if WebGL is unavailable or the component crashes.
-
-### `@react-three/fiber` & `@react-three/drei`
-- **What it does:** React renderer for Three.js and useful abstractions (controls, geometry helpers).
-- **Where it's used:** `src/components/visuals/HeroVisual.tsx` and related 3D spaces.
-- **Why it's necessary:** Vastly simplifies building and managing Three.js scenes declaratively within React.
-- **Fallback:** Same as `three` (UI fallback).
+## Data Visualization
 
 ### `@xyflow/react` (React Flow)
 - **What it does:** Node-based diagramming and flowcharting.
-- **Where it's used:** `OfficialPrerequisiteGraph`, `Year4DecisionWorkflow`, `CurriculumFlowchart`.
+- **Where it's used:** `OfficialPrerequisiteGraph` and the interactive curriculum graph components.
 - **Why it's necessary:** Building interactive, draggable, and zoomable relationship graphs from complex prerequisite data is extremely difficult from scratch.
 - **Fallback:** `CurriculumGridDiagram` (Poster mode) serves as a static, non-interactive alternative for viewing curriculum flow.
 
@@ -50,12 +38,6 @@ This document outlines the rationale for every dependency in this project, answe
 - **Why it's necessary:** Lightweight, scalable, consistent, and cleanly integrated with React.
 - **Fallback:** Text labels or standard HTML entities.
 
-### `clsx`
-- **What it does:** Utility for constructing `className` strings conditionally.
-- **Where it's used:** Throughout common UI components (e.g., `Button`, `Card`, `Badge`).
-- **Why it's necessary:** Keeps component rendering logic clean when juggling multiple conditional styling flags (like `active`, `disabled`, `variant`).
-- **Fallback:** Template literals (can be messy).
-
 ## Search & Data Integrity
 
 ### `zod`
@@ -66,7 +48,7 @@ This document outlines the rationale for every dependency in this project, answe
 
 ### `fuse.js`
 - **What it does:** Lightweight fuzzy-search library.
-- **Where it's used:** `CourseCatalogPage`, `CommandPalette`.
+- **Where it's used:** `src/utils/courseIndex.ts`, which powers course search in the catalog and home search flows.
 - **Why it's necessary:** Simple string `includes()` fails on typos or imperfect queries. Fuse provides robust relevance-based search matching.
 - **Fallback:** Standard `String.prototype.includes`.
 

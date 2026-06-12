@@ -94,7 +94,7 @@ export function AnimatedDependencyMap() {
     window.addEventListener('resize', resize);
     resize(); // initial setup
 
-    let mouse = { x: -1000, y: -1000 };
+    const mouse = { x: -1000, y: -1000 };
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;

@@ -151,22 +151,26 @@ export function AnimatedVisualHero() {
       
       const centerX = w / 2;
       const centerY = h / 2;
-      const radiusX = Math.min(w * 0.35, 300);
-      const radiusY = Math.min(h * 0.35, 200);
+      const isCompact = w < 520;
+      const visibleTopics = isCompact ? topics.filter((_, index) => index % 2 === 0) : topics;
+      const radiusX = Math.min(w * (isCompact ? 0.28 : 0.35), isCompact ? 120 : 300);
+      const radiusY = Math.min(h * (isCompact ? 0.28 : 0.35), isCompact ? 92 : 200);
+      const boxWidth = isCompact ? 42 : 110;
+      const boxHeight = isCompact ? 18 : 36;
 
-      // Create octagon boxes
-      for (let i = 0; i < 8; i++) {
-        const angle = (i * Math.PI * 2) / 8 - Math.PI / 8; // Offset to not be perfectly cardinal
+      // Create topic boxes. Mobile keeps this decorative to avoid label collisions.
+      for (let i = 0; i < visibleTopics.length; i++) {
+        const angle = (i * Math.PI * 2) / visibleTopics.length - Math.PI / 8;
         const bx = centerX + Math.cos(angle) * radiusX;
         const by = centerY + Math.sin(angle) * radiusY;
         
         boxes.push({
           x: bx,
           y: by,
-          w: 110,
-          h: 36,
-          color: topics[i].color,
-          label: topics[i].label
+          w: boxWidth,
+          h: boxHeight,
+          color: visibleTopics[i].color,
+          label: isCompact ? '' : visibleTopics[i].label
         });
       }
 
@@ -244,8 +248,9 @@ export function AnimatedVisualHero() {
 
       // Draw boxes over lines
       boxes.forEach(box => {
-        ctx.fillStyle = `rgba(${box.color}, 0.1)`;
-        ctx.strokeStyle = `rgba(${box.color}, 0.4)`;
+        const compact = !box.label;
+        ctx.fillStyle = `rgba(${box.color}, ${compact ? 0.12 : 0.1})`;
+        ctx.strokeStyle = `rgba(${box.color}, ${compact ? 0.3 : 0.4})`;
         ctx.lineWidth = 1.5;
         
         ctx.beginPath();
@@ -256,12 +261,14 @@ export function AnimatedVisualHero() {
         }
         ctx.fill();
         ctx.stroke();
-        
-        ctx.fillStyle = `rgba(${box.color}, 0.95)`;
-        ctx.font = '600 13px "Inter", "Mitr", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(box.label, box.x, box.y);
+
+        if (box.label) {
+          ctx.fillStyle = `rgba(${box.color}, 0.95)`;
+          ctx.font = '600 13px "Inter", "Mitr", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(box.label, box.x, box.y);
+        }
       });
 
       animationFrameId = requestAnimationFrame(animate);
