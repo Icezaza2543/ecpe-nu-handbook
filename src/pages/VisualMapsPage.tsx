@@ -49,7 +49,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
     {
       id: 'grid',
       title: 'แผนการศึกษา 4 ปี',
-      desc: 'วางภาพรวม 8 เทอมให้เห็นหน่วยกิต วิชาแกน และช่วงที่ workload เริ่มแน่น',
+      desc: 'ภาพรวมรายวิชาในแต่ละเทอม พร้อมเส้นวิชาตัวต่อที่สำคัญ',
       icon: Grid,
       color: 'var(--primary)',
       bg: 'rgba(37, 99, 235, 0.1)',
@@ -57,7 +57,7 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
       signal: '8 เทอม',
       cta: 'เปิดแผน 4 ปี',
       preview: ['ปี 1', 'ปี 2', 'ปี 3', 'ปี 4'],
-      questions: ['ปี 1 ต้องลงเรียนอะไรบ้าง?', 'วิชาเลือกเสรีลงเทอมไหนดี?'],
+      questions: [],
       component: <CurriculumGridDiagram courseIndex={courseIndex} />,
     },
     {
@@ -191,11 +191,13 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
             </div>
           </header>
 
-          <div className="active-map-prompts" aria-label="คำถามที่แผนภาพนี้ช่วยตอบ">
-            {map.questions.map((question) => (
-              <span key={question}>{question}</span>
-            ))}
-          </div>
+          {map.questions.length > 0 && (
+            <div className="active-map-prompts" aria-label="คำถามที่แผนภาพนี้ช่วยตอบ">
+              {map.questions.map((question) => (
+                <span key={question}>{question}</span>
+              ))}
+            </div>
+          )}
 
           <div className="active-map-canvas">
             <ErrorBoundary name={map.title} fallback={<VisualFallback />}>
@@ -295,14 +297,16 @@ export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
                     ))}
                   </div>
 
-                  <div className="map-card__questions">
-                    <strong>ช่วยตอบคำถาม</strong>
-                    <ul>
-                      {map.questions.map((question) => (
-                        <li key={question}>{question}</li>
-                      ))}
-                    </ul>
-                  </div>
+                  {map.questions.length > 0 && (
+                    <div className="map-card__questions">
+                      <strong>ช่วยตอบคำถาม</strong>
+                      <ul>
+                        {map.questions.map((question) => (
+                          <li key={question}>{question}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   <div className="map-card__footer">
                     <span>

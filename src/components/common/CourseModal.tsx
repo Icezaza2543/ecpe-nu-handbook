@@ -5,6 +5,7 @@ import type { CourseIndex } from '../../utils/courseIndex';
 import { getCourseLabel } from '../../utils/graphUtils';
 import { Badge } from './Badge';
 import { SourceBadge } from './SourceBadge';
+import { useCourseModal } from './CourseModalProvider';
 
 interface CourseModalProps {
   course: Course | null;
@@ -13,6 +14,7 @@ interface CourseModalProps {
 }
 
 export function CourseModal({ course, onClose, courseIndex }: CourseModalProps) {
+  const { openCourse } = useCourseModal();
   useEffect(() => {
     if (!course) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -111,6 +113,46 @@ export function CourseModal({ course, onClose, courseIndex }: CourseModalProps) 
         ) : null}
 
         <div className="modal-grid">
+          {course.isSlot && (course.code === '001XXX' || course.code === 'XXXXXX') ? (
+            <section className="course-slot-suggestions">
+              <h3>รายวิชาแนะนำในหมวดนี้</h3>
+              <div className="badge-row" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {courseIndex.getCatalogCourses().filter(c => {
+                  if (course.code === 'XXXXXX') return c.type === 'free-elective' || c.type === 'major-elective';
+                  if (course.code === '001XXX') {
+                    if (c.type !== 'general-education') return false;
+                    const groupTitle = course.titleTh || '';
+                    if (groupTitle.toUpperCase() === 'ENG' || groupTitle.toUpperCase() === 'ENGLISH') {
+                      return ['001211', '001212', '001213'].includes(c.code || '');
+                    }
+                    if (groupTitle.toUpperCase() === 'THAI') {
+                      return (c.titleTh || '').includes('ภาษาไทย') || (c.nameTh || '').includes('ภาษาไทย');
+                    }
+                    if (groupTitle.includes('ภาษา') && !groupTitle.includes('วิทยา')) {
+                      return (c.category || '').includes('ภาษา') || (c.subcategory || '').includes('ภาษา') || (c.titleTh || '').includes('ภาษา') || (c.titleTh || '').includes('การสื่อสาร') || (c.nameTh || '').includes('ภาษา');
+                    }
+                    if (groupTitle.includes('มนุษยศาสตร์')) {
+                      return (c.category || '').includes('มนุษย์') || (c.subcategory || '').includes('มนุษย์') || (c.titleTh || '').includes('มนุษย์') || (c.titleTh || '').includes('สุนทรียะ');
+                    }
+                    if (groupTitle.includes('สังคมศาสตร์')) {
+                      return (c.category || '').includes('สังคม') || (c.subcategory || '').includes('สังคม') || (c.titleTh || '').includes('สังคม') || (c.titleTh || '').includes('ธุรกิจ') || (c.titleTh || '').includes('ประกอบการ') || (c.nameTh || '').includes('สังคม') || (c.nameTh || '').includes('ธุรกิจ');
+                    }
+                    if (groupTitle.includes('วิทยาศาสตร์')) {
+                      return (c.category || '').includes('วิทย์') || (c.subcategory || '').includes('วิทย์') || (c.titleTh || '').includes('วิทย์') || (c.titleTh || '').includes('สุขภาพ') || (c.titleTh || '').includes('คณิต') || (c.titleTh || '').includes('ข้อมูล') || (c.nameTh || '').includes('วิทย์') || (c.nameTh || '').includes('คณิต') || (c.nameTh || '').includes('สุขภาพ') || (c.nameTh || '').includes('ข้อมูล');
+                    }
+                    return true;
+                  }
+                  return false;
+                }).map(c => (
+                  <Badge key={c.id} tone="soft">
+                    <span onClick={() => openCourse(c.id)} style={{ cursor: 'pointer', display: 'block', padding: '2px 4px' }}>
+                      {c.code} {c.titleTh || c.nameTh}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <section>
             <h3>คำอธิบายรายวิชา</h3>
             <p>{course.description || '-'}</p>

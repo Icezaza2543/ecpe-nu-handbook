@@ -17,9 +17,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year1-sem1-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "ENG",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -27,15 +27,16 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year1-sem1-gened-slot-2",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "Thai",
               "credits": "3(2-2-5)",
-              "status": "บังคับเลือก",
+              "status": "วิชาศึกษาทั่วไป",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"
             },
+            
             {
               "code": "001281",
               "courseId": "001281-sports-and-exercises",
@@ -130,9 +131,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year1-sem2-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดภาษา",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -140,15 +141,16 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year1-sem2-gened-slot-2",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดมนุษยศาสตร์",
               "credits": "3(2-2-5)",
-              "status": "บังคับเลือก",
+              "status": "วิชาศึกษาทั่วไป",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"
             },
+            
             {
               "code": "252183",
               "courseId": "calculus-2",
@@ -271,9 +273,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year2-sem1-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดภาษา",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -281,15 +283,16 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year2-sem1-gened-slot-2",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดสังคมศาสตร์",
               "credits": "3(2-2-5)",
-              "status": "บังคับเลือก",
+              "status": "วิชาศึกษาทั่วไป",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"
             },
+            
             {
               "code": "252284",
               "courseId": "calculus-3",
@@ -364,9 +367,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year2-sem2-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดมนุษยศาสตร์",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -374,15 +377,16 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year2-sem2-gened-slot-2",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดวิทยาศาสตร์และคณิตศาสตร์",
               "credits": "3(2-2-5)",
-              "status": "บังคับเลือก",
+              "status": "วิชาศึกษาทั่วไป",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"
             },
+            
             {
               "code": "305202",
               "courseId": "soft-skill-4-community-collaboration",
@@ -495,9 +499,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year3-sem1-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดสังคมศาสตร์",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -575,9 +579,9 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "xxxxxx",
-              "courseId": "year3-sem1-free-elective-slot-9",
-              "titleTh": "วิชาเลือกเสรี",
+              "code": "XXXXXX",
+              "courseId": "year3-sem1-free-elective-slot-1",
+              "titleTh": "เลือกเสรี(วิชาภาค)",
               "credits": "3(x-x-x)",
               "status": "เลือกเสรี",
               "counted": true,
@@ -598,9 +602,9 @@ export const studyPlan = {
           "trackBased": false,
           "courses": [
             {
-              "code": "001xxx",
+              "code": "001XXX",
               "courseId": "year3-sem2-gened-slot-1",
-              "titleTh": "หมวดวิชาศึกษาทั่วไป",
+              "titleTh": "GE หมวดวิทยาศาสตร์",
               "credits": "3(2-2-5)",
               "status": "บังคับเลือก",
               "counted": true,
@@ -668,9 +672,9 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             },
             {
-              "code": "xxxxxx",
-              "courseId": "year3-sem2-free-elective-slot-8",
-              "titleTh": "วิชาเลือกเสรี",
+              "code": "XXXXXX",
+              "courseId": "year3-sem2-free-elective-slot-1",
+              "titleTh": "เลือกเสรี(วิชาภาค)",
               "credits": "3(x-x-x)",
               "status": "เลือกเสรี",
               "counted": true,
@@ -719,11 +723,11 @@ export const studyPlan = {
           "trackBased": true,
           "courses": [
             {
-              "code": "305xxx",
+              "code": "XXXXXX",
               "courseId": "year4-sem1-major-elective-slot-1",
-              "titleTh": "วิชาเลือกทางวิศวกรรม",
+              "titleTh": "เลือกเสรี(วิชาภาค)",
               "credits": "3(x-x-x)",
-              "status": "เลือก",
+              "status": "เลือกเสรี",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"
@@ -772,11 +776,11 @@ export const studyPlan = {
           "trackBased": true,
           "courses": [
             {
-              "code": "305xxx",
+              "code": "XXXXXX",
               "courseId": "year4-sem2-major-elective-slot-1",
-              "titleTh": "วิชาเลือกทางวิศวกรรม",
+              "titleTh": "เลือกเสรี(วิชาภาค)",
               "credits": "3(x-x-x)",
-              "status": "เลือก",
+              "status": "เลือกเสรี",
               "counted": true,
               "isSlot": true,
               "officialPrerequisiteText": "-"

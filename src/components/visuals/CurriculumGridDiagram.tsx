@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { studyPlan } from '../../data/studyPlan';
 import { officialPrerequisites } from '../../data/officialPrerequisites';
 import type { CourseIndex } from '../../utils/courseIndex';
-import { SectionHeader } from '../common/SectionHeader';
 import { useCourseModal } from '../common/CourseModalProvider';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { StudyYear, StudyCourse } from '../../types/curriculum';
@@ -78,10 +77,10 @@ const COURSE_SHORT_NAMES: Record<string, string> = {
   "305496": "Research 2",
 
   "305191": "Field Exp 1",
-  "305192": "Field Exp 2",
-  "305291": "Field Exp 3",
-  "305292": "Field Exp 4",
-  "305391": "Field Exp 5",
+  "305291": "Field Exp 2",
+  "305292": "Field Exp 3",
+  "305391": "Field Exp 4",
+  "305392": "Field Exp 5",
   "305393": "Training",
 
   "300301": "Technopreneur",
@@ -100,44 +99,471 @@ function getCourseShortName(course: { code?: string, titleTh?: string }): string
   if (course.code && COURSE_SHORT_NAMES[course.code]) {
     return COURSE_SHORT_NAMES[course.code];
   }
-  if (!course.code || course.code === 'xxxxxx' || course.code.includes('xxx')) {
+  if (!course.code || course.code.toLowerCase() === 'xxxxxx' || course.code.toLowerCase().includes('xxx')) {
     const t = course.titleTh || '';
-    if (course.code === '001xxx' || t.includes('ศึกษาทั่วไป')) return 'GenEd';
+    if (course.code?.toLowerCase() === '001xxx' || t.includes('ศึกษาทั่วไป')) {
+      return (t && t !== 'หมวดวิชาศึกษาทั่วไป') ? t : 'GenEd';
+    }
     if (t.includes('เลือกทางวิศวกรรม')) return 'Major Elective';
-    if (t.includes('เลือกเสรี')) return 'Free Elective';
+    if (t.includes('เลือกเสรี')) {
+      return (t && t !== 'วิชาเลือกเสรี') ? t : 'Free Elective';
+    }
     return 'Elective';
   }
   return course.titleTh || course.code || 'Unknown';
 }
 
-// ---------------------------------------------------------
-// KEY CHAINS DEFINITION (Manual Deterministic Lanes)
-// ---------------------------------------------------------
-type KeyChain = { id: string; offset: number; color: string; nodes: string[] };
+type RoadSide = 'top' | 'right' | 'bottom' | 'left';
+type RouteMode = 'avoidCards' | 'straightVertical';
+type MarkerSize = 'default' | 'small';
 
-const KEY_CHAINS: KeyChain[] = [
-  { id: 'math', offset: 0, color: '#be185d', nodes: ['252182', '252183', '252284'] }, // Calc
-  { id: 'physics', offset: -12, color: '#be185d', nodes: ['261101', '261102'] }, // Physics
-  { id: 'prog', offset: 12, color: '#15803d', nodes: ['305121', '305122', '305232'] }, // Programming
-  { id: 'logic', offset: 24, color: '#1d4ed8', nodes: ['305241', '305341', '305342'] }, // Embed
-  { id: 'circuit', offset: 36, color: '#1d4ed8', nodes: ['305142', '305245'] }, // Electronics
-  { id: 'proj1', offset: 0, color: '#7e22ce', nodes: ['305491', '305492'] },
-  { id: 'proj2', offset: 10, color: '#7e22ce', nodes: ['305493', '305494'] },
-  { id: 'proj3', offset: -10, color: '#7e22ce', nodes: ['305495', '305496'] },
+type EdgeRoad = {
+  markerId: string;
+  lane: number;
+  color: string;
+  fromSide?: RoadSide;
+  toSide?: RoadSide;
+  routeMode?: RouteMode;
+  markerSize?: MarkerSize;
+};
+
+type Point = { x: number; y: number };
+type RectBounds = { left: number; top: number; right: number; bottom: number };
+
+const ROAD_ROUTER = {
+  boundaryGap: 10,
+  obstaclePadding: 3,
+  cardGap: 6,
+  anchorGap: 6,
+  cornerRadius: 7,
+} as const;
+
+const EDGE_MARKERS = [
+  { id: 'math', color: CATEGORIES.math.color },
+  { id: 'prog', color: CATEGORIES.prog.color },
+  { id: 'hard', color: CATEGORIES.hard.color },
+  { id: 'proj', color: CATEGORIES.proj.color },
+  { id: 'official', color: '#475569' },
 ];
+
+// Edit these road settings when you want to hand-tune a prerequisite lane.
+// lane moves the road farther away from cards; fromSide/toSide pin the exit and entry side.
+const OFFICIAL_EDGE_ROADS: Record<string, EdgeRoad> = {
+  '252182->252183': { markerId: 'math', lane: 8, color: CATEGORIES.math.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '252183->252284': { markerId: 'math', lane: 16, color: CATEGORIES.math.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '252182->305233': { markerId: 'math', lane: 8, color: CATEGORIES.math.color, fromSide: 'right', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '305121->305323': { markerId: 'prog', lane: 18, color: CATEGORIES.prog.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical' },
+  '305142->305245': { markerId: 'hard', lane: 18, color: CATEGORIES.hard.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical' },
+  '305241->305341': { markerId: 'hard', lane: 10, color: CATEGORIES.hard.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical' },
+  '305341->305342': { markerId: 'hard', lane: 10, color: CATEGORIES.hard.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '305491->305492': { markerId: 'proj', lane: 14, color: CATEGORIES.proj.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '305493->305494': { markerId: 'proj', lane: 8, color: CATEGORIES.proj.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+  '305495->305496': { markerId: 'proj', lane: 16, color: CATEGORIES.proj.color, fromSide: 'bottom', toSide: 'top', routeMode: 'straightVertical', markerSize: 'small' },
+};
+
+function getOfficialEdgeRoad(fromCode: string, toCode: string, index: number): EdgeRoad {
+  return OFFICIAL_EDGE_ROADS[`${fromCode}->${toCode}`] || {
+    markerId: 'official',
+    lane: 10 + (index % 4) * 6,
+    color: '#475569',
+  };
+}
 
 type LineCoords = {
   id: string;
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
+  points: Point[];
   source: string;
   target: string;
   color: string;
-  offset: number;
-  isSameRow?: boolean;
+  lane: number;
+  markerId: string;
+  markerSize: MarkerSize;
+  routeMode: RouteMode;
 };
+
+function inflateRect(rect: RectBounds, padding: number): RectBounds {
+  return {
+    left: rect.left - padding,
+    top: rect.top - padding,
+    right: rect.right + padding,
+    bottom: rect.bottom + padding,
+  };
+}
+
+function getElementRect(element: HTMLElement, containerRect: DOMRect): RectBounds {
+  const rect = element.getBoundingClientRect();
+  return {
+    left: rect.left - containerRect.left,
+    top: rect.top - containerRect.top,
+    right: rect.right - containerRect.left,
+    bottom: rect.bottom - containerRect.top,
+  };
+}
+
+function pointInRect(point: Point, rect: RectBounds): boolean {
+  return point.x > rect.left && point.x < rect.right && point.y > rect.top && point.y < rect.bottom;
+}
+
+function segmentIntersectsRect(a: Point, b: Point, rect: RectBounds): boolean {
+  const minX = Math.min(a.x, b.x);
+  const maxX = Math.max(a.x, b.x);
+  const minY = Math.min(a.y, b.y);
+  const maxY = Math.max(a.y, b.y);
+
+  if (Math.abs(a.y - b.y) < 0.1) {
+    return a.y > rect.top && a.y < rect.bottom && maxX > rect.left && minX < rect.right;
+  }
+
+  if (Math.abs(a.x - b.x) < 0.1) {
+    return a.x > rect.left && a.x < rect.right && maxY > rect.top && minY < rect.bottom;
+  }
+
+  return false;
+}
+
+function isPointClear(point: Point, obstacles: RectBounds[], width: number, height: number): boolean {
+  if (
+    point.x < ROAD_ROUTER.boundaryGap ||
+    point.y < ROAD_ROUTER.boundaryGap ||
+    point.x > width - ROAD_ROUTER.boundaryGap ||
+    point.y > height - ROAD_ROUTER.boundaryGap
+  ) {
+    return false;
+  }
+
+  return !obstacles.some(rect => pointInRect(point, rect));
+}
+
+function isSegmentClear(a: Point, b: Point, obstacles: RectBounds[]): boolean {
+  return !obstacles.some(rect => segmentIntersectsRect(a, b, rect));
+}
+
+function uniqueSorted(values: number[], min: number, max: number): number[] {
+  const rounded = values
+    .map(value => Math.round(value * 10) / 10)
+    .filter(value => value >= min && value <= max);
+
+  return Array.from(new Set(rounded)).sort((a, b) => a - b);
+}
+
+function snapPoint(point: Point): Point {
+  return {
+    x: Math.round(point.x * 10) / 10,
+    y: Math.round(point.y * 10) / 10,
+  };
+}
+
+function getAnchor(rect: RectBounds, side: RoadSide, road: EdgeRoad, extraGap = 0): Point {
+  const centerX = (rect.left + rect.right) / 2;
+  const centerY = (rect.top + rect.bottom) / 2;
+  const gap = ROAD_ROUTER.anchorGap + Math.min(road.lane, 12) * 0.15 + extraGap;
+
+  switch (side) {
+    case 'top':
+      return { x: centerX, y: rect.top - gap };
+    case 'right':
+      return { x: rect.right + gap, y: centerY };
+    case 'bottom':
+      return { x: centerX, y: rect.bottom + gap };
+    case 'left':
+      return { x: rect.left - gap, y: centerY };
+  }
+}
+
+function getClearAnchor(
+  rect: RectBounds,
+  side: RoadSide,
+  road: EdgeRoad,
+  obstacles: RectBounds[],
+  width: number,
+  height: number
+): Point {
+  for (let extraGap = 0; extraGap <= 220; extraGap += 8) {
+    const point = snapPoint(getAnchor(rect, side, road, extraGap));
+    if (isPointClear(point, obstacles, width, height)) return point;
+  }
+
+  const centerX = (rect.left + rect.right) / 2;
+  const centerY = (rect.top + rect.bottom) / 2;
+  switch (side) {
+    case 'top':
+      return { x: snapPoint({ x: centerX, y: 0 }).x, y: ROAD_ROUTER.boundaryGap };
+    case 'right':
+      return { x: width - ROAD_ROUTER.boundaryGap, y: snapPoint({ x: 0, y: centerY }).y };
+    case 'bottom':
+      return { x: snapPoint({ x: centerX, y: 0 }).x, y: height - ROAD_ROUTER.boundaryGap };
+    case 'left':
+      return { x: ROAD_ROUTER.boundaryGap, y: snapPoint({ x: 0, y: centerY }).y };
+  }
+}
+
+function getOrderedAnchors(
+  rect: RectBounds,
+  preferredSide: RoadSide | undefined,
+  road: EdgeRoad,
+  obstacles: RectBounds[],
+  width: number,
+  height: number
+): Point[] {
+  const sides: RoadSide[] = preferredSide
+    ? [preferredSide, ...(['top', 'right', 'bottom', 'left'] as RoadSide[]).filter(side => side !== preferredSide)]
+    : ['top', 'right', 'bottom', 'left'];
+
+  return sides.map(side => getClearAnchor(rect, side, road, obstacles, width, height));
+}
+
+function simplifyRoadPoints(points: Point[]): Point[] {
+  if (points.length <= 2) return points;
+
+  const simplified: Point[] = [points[0]];
+  for (let i = 1; i < points.length - 1; i++) {
+    const prev = simplified[simplified.length - 1];
+    const current = points[i];
+    const next = points[i + 1];
+    const sameX = Math.abs(prev.x - current.x) < 0.1 && Math.abs(current.x - next.x) < 0.1;
+    const sameY = Math.abs(prev.y - current.y) < 0.1 && Math.abs(current.y - next.y) < 0.1;
+
+    if (!sameX && !sameY) simplified.push(current);
+  }
+  simplified.push(points[points.length - 1]);
+
+  return simplified;
+}
+
+function routeCost(points: Point[]): number {
+  if (points.length < 2) return Number.POSITIVE_INFINITY;
+
+  let distance = 0;
+  let turns = 0;
+  for (let i = 1; i < points.length; i++) {
+    distance += Math.abs(points[i].x - points[i - 1].x) + Math.abs(points[i].y - points[i - 1].y);
+    if (i > 1) {
+      const prevHorizontal = Math.abs(points[i - 1].y - points[i - 2].y) < 0.1;
+      const currentHorizontal = Math.abs(points[i].y - points[i - 1].y) < 0.1;
+      if (prevHorizontal !== currentHorizontal) turns += 1;
+    }
+  }
+
+  return distance + turns * 18;
+}
+
+function findRoadPath(
+  start: Point,
+  end: Point,
+  obstacles: RectBounds[],
+  width: number,
+  height: number
+): Point[] | null {
+  const snappedStart = snapPoint(start);
+  const snappedEnd = snapPoint(end);
+
+  if (!isPointClear(snappedStart, obstacles, width, height) || !isPointClear(snappedEnd, obstacles, width, height)) {
+    return null;
+  }
+
+  const xCoords = uniqueSorted([
+    ROAD_ROUTER.boundaryGap,
+    width - ROAD_ROUTER.boundaryGap,
+    snappedStart.x,
+    snappedEnd.x,
+    ...obstacles.flatMap(rect => [rect.left - ROAD_ROUTER.cardGap, rect.right + ROAD_ROUTER.cardGap]),
+  ], ROAD_ROUTER.boundaryGap, width - ROAD_ROUTER.boundaryGap);
+
+  const yCoords = uniqueSorted([
+    ROAD_ROUTER.boundaryGap,
+    height - ROAD_ROUTER.boundaryGap,
+    snappedStart.y,
+    snappedEnd.y,
+    ...obstacles.flatMap(rect => [rect.top - ROAD_ROUTER.cardGap, rect.bottom + ROAD_ROUTER.cardGap]),
+  ], ROAD_ROUTER.boundaryGap, height - ROAD_ROUTER.boundaryGap);
+
+  const keyFor = (point: Point) => `${point.x},${point.y}`;
+  const pointFor = (key: string): Point => {
+    const [x, y] = key.split(',').map(Number);
+    return { x, y };
+  };
+
+  const open = new Set<string>([keyFor(snappedStart)]);
+  const cameFrom = new Map<string, string>();
+  const gScore = new Map<string, number>([[keyFor(snappedStart), 0]]);
+  const fScore = new Map<string, number>([[keyFor(snappedStart), Math.abs(snappedStart.x - snappedEnd.x) + Math.abs(snappedStart.y - snappedEnd.y)]]);
+  const endKey = keyFor(snappedEnd);
+  const maxIterations = xCoords.length * yCoords.length;
+  let iterations = 0;
+
+  while (open.size > 0 && iterations < maxIterations) {
+    iterations += 1;
+    let currentKey = '';
+    let bestScore = Number.POSITIVE_INFINITY;
+
+    open.forEach(key => {
+      const score = fScore.get(key) ?? Number.POSITIVE_INFINITY;
+      if (score < bestScore) {
+        bestScore = score;
+        currentKey = key;
+      }
+    });
+
+    if (currentKey === endKey) {
+      const points: Point[] = [snappedEnd];
+      let cursor = currentKey;
+      while (cameFrom.has(cursor)) {
+        cursor = cameFrom.get(cursor) as string;
+        points.unshift(pointFor(cursor));
+      }
+      return simplifyRoadPoints(points);
+    }
+
+    open.delete(currentKey);
+    const current = pointFor(currentKey);
+    const xIndex = xCoords.indexOf(current.x);
+    const yIndex = yCoords.indexOf(current.y);
+    const neighbors = [
+      xIndex > 0 ? { x: xCoords[xIndex - 1], y: current.y } : null,
+      xIndex < xCoords.length - 1 ? { x: xCoords[xIndex + 1], y: current.y } : null,
+      yIndex > 0 ? { x: current.x, y: yCoords[yIndex - 1] } : null,
+      yIndex < yCoords.length - 1 ? { x: current.x, y: yCoords[yIndex + 1] } : null,
+    ].filter((point): point is Point => !!point);
+
+    neighbors.forEach(neighbor => {
+      if (!isPointClear(neighbor, obstacles, width, height) || !isSegmentClear(current, neighbor, obstacles)) {
+        return;
+      }
+
+      const neighborKey = keyFor(neighbor);
+      const tentativeScore = (gScore.get(currentKey) ?? Number.POSITIVE_INFINITY)
+        + Math.abs(current.x - neighbor.x)
+        + Math.abs(current.y - neighbor.y);
+
+      if (tentativeScore < (gScore.get(neighborKey) ?? Number.POSITIVE_INFINITY)) {
+        cameFrom.set(neighborKey, currentKey);
+        gScore.set(neighborKey, tentativeScore);
+        fScore.set(
+          neighborKey,
+          tentativeScore + Math.abs(neighbor.x - snappedEnd.x) + Math.abs(neighbor.y - snappedEnd.y)
+        );
+        open.add(neighborKey);
+      }
+    });
+  }
+
+  return null;
+}
+
+function routeAroundCards(
+  sourceRect: RectBounds,
+  targetRect: RectBounds,
+  obstacles: RectBounds[],
+  road: EdgeRoad,
+  width: number,
+  height: number
+): Point[] {
+  const startAnchors = getOrderedAnchors(sourceRect, road.fromSide, road, obstacles, width, height);
+  const endAnchors = getOrderedAnchors(targetRect, road.toSide, road, obstacles, width, height);
+  let bestPath: Point[] | null = null;
+  let bestCost = Number.POSITIVE_INFINITY;
+
+  startAnchors.forEach((start, startIndex) => {
+    endAnchors.forEach((end, endIndex) => {
+      const path = findRoadPath(start, end, obstacles, width, height);
+      if (!path) return;
+
+      const cost = routeCost(path) + startIndex * 90 + endIndex * 90;
+      if (cost < bestCost) {
+        bestPath = path;
+        bestCost = cost;
+      }
+    });
+  });
+
+  return bestPath || [startAnchors[0], endAnchors[0]];
+}
+
+function routeStraightVertical(sourceRect: RectBounds, targetRect: RectBounds, road: EdgeRoad): Point[] {
+  const fromSide = road.fromSide || 'bottom';
+  const toSide = road.toSide || 'top';
+  const start = snapPoint(getAnchor(sourceRect, fromSide, road));
+  const end = snapPoint(getAnchor(targetRect, toSide, road));
+
+  if (Math.abs(start.x - end.x) < 1 || Math.abs(start.y - end.y) < 1) {
+    return [start, end];
+  }
+
+  if (fromSide === 'left' || fromSide === 'right' || toSide === 'left' || toSide === 'right') {
+    const useRightRoad = fromSide === 'right' || toSide === 'right';
+    const roadX = useRightRoad
+      ? Math.max(sourceRect.right, targetRect.right) + ROAD_ROUTER.anchorGap + (road.lane || 0)
+      : Math.min(sourceRect.left, targetRect.left) - ROAD_ROUTER.anchorGap - (road.lane || 0);
+
+    const isToVertical = toSide === 'top' || toSide === 'bottom';
+    if (isToVertical) {
+      const approachY = toSide === 'top'
+        ? targetRect.top - ROAD_ROUTER.anchorGap - (road.lane || 0) - 16
+        : targetRect.bottom + ROAD_ROUTER.anchorGap + (road.lane || 0) + 16;
+
+      return simplifyRoadPoints([
+        start,
+        snapPoint({ x: roadX, y: start.y }),
+        snapPoint({ x: roadX, y: approachY }),
+        snapPoint({ x: end.x, y: approachY }),
+        end,
+      ]);
+    }
+
+    return simplifyRoadPoints([
+      start,
+      snapPoint({ x: roadX, y: start.y }),
+      snapPoint({ x: roadX, y: end.y }),
+      end,
+    ]);
+  }
+
+  if (fromSide === 'bottom' && toSide === 'top') {
+    const dropY = start.y + ROAD_ROUTER.anchorGap + (road.lane || 0);
+    return simplifyRoadPoints([
+      start,
+      { x: start.x, y: dropY },
+      { x: end.x, y: dropY },
+      end,
+    ]);
+  }
+
+  return simplifyRoadPoints([
+    start,
+    { x: start.x, y: end.y },
+    end,
+  ]);
+}
+
+function createRoundedRoadPath(points: Point[]): string {
+  if (points.length === 0) return '';
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  if (points.length === 2) return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+
+  let path = `M ${points[0].x} ${points[0].y}`;
+
+  for (let i = 1; i < points.length - 1; i++) {
+    const prev = points[i - 1];
+    const current = points[i];
+    const next = points[i + 1];
+    const incoming = Math.abs(prev.x - current.x) + Math.abs(prev.y - current.y);
+    const outgoing = Math.abs(next.x - current.x) + Math.abs(next.y - current.y);
+    const radius = Math.min(ROAD_ROUTER.cornerRadius, incoming / 2, outgoing / 2);
+    const before: Point = {
+      x: current.x + (prev.x === current.x ? 0 : prev.x < current.x ? -radius : radius),
+      y: current.y + (prev.y === current.y ? 0 : prev.y < current.y ? -radius : radius),
+    };
+    const after: Point = {
+      x: current.x + (next.x === current.x ? 0 : next.x < current.x ? -radius : radius),
+      y: current.y + (next.y === current.y ? 0 : next.y < current.y ? -radius : radius),
+    };
+
+    path += ` L ${before.x} ${before.y} Q ${current.x} ${current.y} ${after.x} ${after.y}`;
+  }
+
+  const last = points[points.length - 1];
+  return `${path} L ${last.x} ${last.y}`;
+}
 
 export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseIndex }) {
   const { openCourse } = useCourseModal();
@@ -152,85 +578,86 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
     setExpandedSems(prev => ({ ...prev, [semId]: !prev[semId] }));
   };
 
-  const semesters = ((studyPlan as { years?: StudyYear[] }).years || []).flatMap((year) =>
+  const semesters = useMemo(() => ((studyPlan as { years?: StudyYear[] }).years || []).flatMap((year) =>
     (year.semesters || year.terms || []).map(sem => ({ ...sem, yearNumber: year.year }))
-  );
+  ), []);
 
-  // Group Courses to maintain 2-line maximum
+  const officialPlanEdges = useMemo(() => {
+    const visibleCourseCodes = new Set(
+      semesters
+        .flatMap(sem => sem.courses || [])
+        .map(course => course.code)
+        .filter((code): code is string => !!code && !code.includes('x') && !code.includes('group'))
+    );
+
+    return officialPrerequisites.filter(edge =>
+      visibleCourseCodes.has(edge.from) && visibleCourseCodes.has(edge.to)
+    );
+  }, [semesters]);
+
+  const keyCourseCodes = useMemo(() => new Set(
+    officialPlanEdges.flatMap(edge => [edge.from, edge.to])
+  ), [officialPlanEdges]);
+
+  // Group Courses to maintain 2-line maximum (disabled to match exactly one line per requirement)
   const compactSemesterCourses = (courses: StudyCourse[]) => {
-    if (courses.length <= 6) return courses as (StudyCourse & { groupedCourses?: StudyCourse[] })[];
-    
-    const keyCourses: (StudyCourse & { groupedCourses?: StudyCourse[] })[] = [];
-    const genEdList: StudyCourse[] = [];
-    const elecList: StudyCourse[] = [];
-    const softList: StudyCourse[] = [];
-
-    courses.forEach(c => {
-      const short = getCourseShortName(c);
-      if (short === 'GenEd') genEdList.push(c);
-      else if (short.includes('Elective')) elecList.push(c);
-      else if (short.includes('Soft Skill')) softList.push(c);
-      else keyCourses.push(c);
-    });
-
-    if (genEdList.length > 0) keyCourses.push({ code: 'gened-group', titleTh: `ศึกษาทั่วไป x${genEdList.length}`, courseId: 'gened-group', groupedCourses: genEdList });
-    if (elecList.length > 0) keyCourses.push({ code: 'elec-group', titleTh: `วิชาเลือก x${elecList.length}`, courseId: 'elec-group', groupedCourses: elecList });
-    if (softList.length > 0) keyCourses.push({ code: 'soft-group', titleTh: `ทักษะเสริม x${softList.length}`, courseId: 'soft-group', groupedCourses: softList });
-
-    return keyCourses;
+    return courses as (StudyCourse & { groupedCourses?: StudyCourse[] })[];
   };
 
-  // Extract edges from chains
   const calculateLines = useCallback(() => {
     if (!containerRef.current) return;
     
     const newLines: LineCoords[] = [];
     const containerRect = containerRef.current.getBoundingClientRect();
+    const posterWidth = containerRef.current.clientWidth;
+    const posterHeight = containerRef.current.clientHeight;
+    const obstacles = Array.from(
+      containerRef.current.querySelectorAll<HTMLElement>('[id^="cm-node-"]')
+    )
+      .filter(element => element.dataset.roadObstacle !== 'false')
+      .map(element => inflateRect(
+        getElementRect(element, containerRect),
+        ROAD_ROUTER.obstaclePadding
+      ));
     
-    KEY_CHAINS.forEach(chain => {
-      for (let i = 0; i < chain.nodes.length - 1; i++) {
-        const fromCode = chain.nodes[i];
-        const toCode = chain.nodes[i+1];
+    officialPlanEdges.forEach((edge, index) => {
+      const fromCode = edge.from;
+      const toCode = edge.to;
+      const edgeRoad = getOfficialEdgeRoad(fromCode, toCode, index);
         
-        const sourceEl = document.getElementById(`cm-node-${fromCode}`);
-        const targetEl = document.getElementById(`cm-node-${toCode}`);
+      const sourceEl = document.getElementById(`cm-node-${fromCode}`);
+      const targetEl = document.getElementById(`cm-node-${toCode}`);
         
-        if (sourceEl && targetEl && sourceEl.offsetParent && targetEl.offsetParent) {
-          const sRect = sourceEl.getBoundingClientRect();
-          const tRect = targetEl.getBoundingClientRect();
+      if (sourceEl && targetEl && sourceEl.offsetParent && targetEl.offsetParent) {
+        const sourceRect = getElementRect(sourceEl, containerRect);
+        const targetRect = getElementRect(targetEl, containerRect);
+        const points = edgeRoad.routeMode === 'straightVertical'
+          ? routeStraightVertical(sourceRect, targetRect, edgeRoad)
+          : routeAroundCards(
+            sourceRect,
+            targetRect,
+            obstacles,
+            edgeRoad,
+            posterWidth,
+            posterHeight
+          );
           
-          const sameSemester = Math.abs(sRect.top - tRect.top) < 40;
-          let x1, y1, x2, y2, isSameRow;
-          
-          if (sameSemester) {
-            x1 = (sRect.left + sRect.right) / 2 - containerRect.left;
-            y1 = sRect.bottom - containerRect.top;
-            x2 = (tRect.left + tRect.right) / 2 - containerRect.left;
-            y2 = tRect.bottom - containerRect.top + 6;
-            isSameRow = true;
-          } else {
-            x1 = (sRect.left + sRect.right) / 2 - containerRect.left;
-            y1 = sRect.bottom - containerRect.top;
-            x2 = (tRect.left + tRect.right) / 2 - containerRect.left;
-            y2 = tRect.top - containerRect.top - 6;
-            isSameRow = false;
-          }
-          
-          newLines.push({
-            id: `line-${fromCode}-${toCode}`,
-            x1, y1, x2, y2,
-            isSameRow,
-            source: fromCode,
-            target: toCode,
-            color: chain.color,
-            offset: chain.offset
-          });
-        }
+        newLines.push({
+          id: `line-${fromCode}-${toCode}`,
+          points,
+          source: fromCode,
+          target: toCode,
+          color: edgeRoad.color,
+          lane: edgeRoad.lane,
+          markerId: edgeRoad.markerId,
+          markerSize: edgeRoad.markerSize || 'default',
+          routeMode: edgeRoad.routeMode || 'avoidCards'
+        });
       }
     });
     
     setLines(newLines);
-  }, []);
+  }, [officialPlanEdges]);
 
   useEffect(() => {
     const timeout = setTimeout(calculateLines, 150);
@@ -241,59 +668,60 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
     };
   }, [calculateLines]);
 
-  const createPath = (line: LineCoords) => {
-    const { x1, y1, x2, y2, isSameRow, offset } = line;
-    
-    if (isSameRow) {
-      const gutterY = Math.max(y1, y2) + 12 + offset;
-      const r = 6;
-      const dir = x2 > x1 ? 1 : -1;
-      
-      if (Math.abs(x2 - x1) < 10) return `M ${x1} ${y1} L ${x2} ${y2}`;
-      
-      return `M ${x1} ${y1} 
-              L ${x1} ${gutterY - r} 
-              Q ${x1} ${gutterY} ${x1 + (r * dir)} ${gutterY} 
-              L ${x2 - (r * dir)} ${gutterY} 
-              Q ${x2} ${gutterY} ${x2} ${gutterY - r} 
-              L ${x2} ${y2}`;
-    } else {
-      const dy = Math.abs(y2 - y1);
-      const gutterY = y1 + Math.min(24, dy * 0.5) + offset;
-      const r = 8;
-      
-      if (Math.abs(x2 - x1) < 10) {
-        return `M ${x1} ${y1} L ${x2} ${y2}`;
-      } else {
-        const dir = x2 > x1 ? 1 : -1;
-        return `M ${x1} ${y1} 
-                L ${x1} ${gutterY - r} 
-                Q ${x1} ${gutterY} ${x1 + (r * dir)} ${gutterY} 
-                L ${x2 - (r * dir)} ${gutterY} 
-                Q ${x2} ${gutterY} ${x2} ${gutterY + r} 
-                L ${x2} ${y2}`;
-      }
-    }
+  const createPath = (line: LineCoords) => createRoundedRoadPath(line.points);
+
+  const EXACT_ORDER: Record<string, string[]> = {
+    'year1-sem1': ['252182', '261101', '261111', '001281', '305121', '305131', '305141', '305101', 'year1-sem1-gened-slot-1', 'year1-sem1-gened-slot-2'],
+    'year1-sem2': ['252183', '261102', '261112', '305142', '305122', '305132', '305191', '305102', 'year1-sem2-gened-slot-1', 'year1-sem2-gened-slot-2'],
+    'year1-summer': ['305193'],
+    'year2-sem1': ['252284', '305241', 'gap-y2s1-1', 'gap-y2s1-2', '305232', '305230', '305291', '305201', 'year2-sem1-gened-slot-1', 'year2-sem1-gened-slot-2'],
+    'year2-sem2': ['305233', 'gap-y2s2-1', '305245', '305231', '305242', '305221', '305292', '305202', 'year2-sem2-gened-slot-1', 'year2-sem2-gened-slot-2'],
+    'year2-summer': ['305293'],
+    'year3-sem1': ['gap-y3s1-1', '305341', '300302', '305311', '305331', '305343', '305391', '305301', 'year3-sem1-gened-slot-1', 'year3-sem1-free-elective-slot-1'],
+    'year3-sem2': ['gap-y3s2-1', '305342', '300301', '305334', '305335', '305323', '305392', 'year3-sem2-gened-slot-1', 'year3-sem2-free-elective-slot-1'],
+    'year3-summer': ['305393'],
+    'year4-sem1': ['305491', '305493', '305495', 'year4-sem1-major-elective-slot-1'],
+    'year4-sem2': ['305492', '305494', '305496', 'year4-sem2-major-elective-slot-1']
   };
 
-  // Sort: Key sources to the left
-  const sortPosterCourses = (courses: StudyCourse[]) => {
-    return [...courses].sort((a, b) => {
-      const aCode = a.code || a.courseId || '';
-      const bCode = b.code || b.courseId || '';
-      
-      const aIsKey = KEY_CHAINS.some(c => c.nodes.includes(aCode));
-      const bIsKey = KEY_CHAINS.some(c => c.nodes.includes(bCode));
-      
-      if (aIsKey && !bIsKey) return -1;
-      if (!aIsKey && bIsKey) return 1;
-      return 0;
+  // Sort: Exact match based on the provided poster layout
+  const sortPosterCourses = (semId: string, courses: StudyCourse[]) => {
+    const order = EXACT_ORDER[semId] || [];
+    const sorted = [...courses].sort((a, b) => {
+      const aId = (a.code === '001XXX' || a.code === 'XXXXXX') ? a.courseId : a.code;
+      const bId = (b.code === '001XXX' || b.code === 'XXXXXX') ? b.courseId : b.code;
+      const indexA = order.indexOf(aId || '');
+      const indexB = order.indexOf(bId || '');
+      const posA = indexA === -1 ? 999 : indexA;
+      const posB = indexB === -1 ? 999 : indexB;
+      return posA - posB;
     });
+
+    const finalCourses: any[] = [];
+    order.forEach(id => {
+      if (id.startsWith('gap')) {
+        finalCourses.push({ code: id, titleTh: '', courseId: id });
+      } else {
+        const found = sorted.find(c => {
+          const cId = (c.code === '001XXX' || c.code === 'XXXXXX') ? c.courseId : c.code;
+          return cId === id;
+        });
+        if (found) finalCourses.push(found);
+      }
+    });
+
+    sorted.forEach(c => {
+      const cId = (c.code === '001XXX' || c.code === 'XXXXXX') ? c.courseId : c.code;
+      if (!order.includes(cId || '')) {
+        finalCourses.push(c);
+      }
+    });
+
+    return finalCourses as StudyCourse[];
   };
 
   return (
     <section className="visual-card">
-      <SectionHeader title="แผนผังหลักสูตร 4 ปี" description="ภาพรวมรายวิชาในแต่ละเทอม พร้อมเส้นวิชาตัวต่อที่สำคัญ" />
       
       {/* Legend */}
       <div style={{ marginBottom: '24px' }}>
@@ -316,7 +744,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
               position: 'relative', 
               width: '100%', 
               maxWidth: '1080px', 
-              aspectRatio: '1 / 1', 
+              aspectRatio: '1 / 1.16', 
               background: '#ffffff', 
               borderRadius: '16px', 
               border: '1px solid #e2e8f0', 
@@ -325,19 +753,28 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              gap: '24px',
               overflow: 'hidden'
             }}
           >
             {/* SVG OVERLAY */}
-            <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+            <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 30 }}>
               <defs>
-                {KEY_CHAINS.map(c => (
+                {EDGE_MARKERS.map(c => (
                   <marker key={`arrow-${c.id}`} id={`arrow-${c.id}`} markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
                     <polygon points="0 0, 7 2.5, 0 5" fill={c.color} />
                   </marker>
                 ))}
+                {EDGE_MARKERS.map(c => (
+                  <marker key={`arrow-${c.id}-small`} id={`arrow-${c.id}-small`} markerWidth="5" markerHeight="4" refX="4.5" refY="2" orient="auto">
+                    <polygon points="0 0, 5 2, 0 4" fill={c.color} />
+                  </marker>
+                ))}
                 <marker id="arrow-active" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
                   <polygon points="0 0, 8 3, 0 6" fill="#f97316" />
+                </marker>
+                <marker id="arrow-active-small" markerWidth="6" markerHeight="4" refX="5.2" refY="2" orient="auto">
+                  <polygon points="0 0, 6 2, 0 4" fill="#f97316" />
                 </marker>
                 <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                   <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#f97316" floodOpacity="0.5"/>
@@ -346,38 +783,44 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
 
               {lines.map(line => {
                 const isActive = hoveredCourse === line.source || hoveredCourse === line.target;
+                const markerSuffix = line.markerSize === 'small' ? '-small' : '';
                 
                 let strokeColor = line.color;
-                let strokeWidth = 3.5;
+                let strokeWidth = line.markerSize === 'small' ? 2.7 : 3.5;
                 let opacity = 0.9;
-                let markerId = `url(#arrow-${KEY_CHAINS.find(c => c.color === line.color)?.id})`;
-                let zIndex = 5;
+                let markerId = `url(#arrow-${line.markerId}${markerSuffix})`;
                 let filter = 'none';
                 
                 if (isActive) {
                   strokeColor = '#f97316';
-                  strokeWidth = 4.5;
+                  strokeWidth = line.markerSize === 'small' ? 3.4 : 4.5;
                   opacity = 1;
-                  markerId = 'url(#arrow-active)';
-                  zIndex = 20;
+                  markerId = `url(#arrow-active${markerSuffix})`;
                   filter = 'url(#glow)';
                 } else if (hoveredCourse && !isActive) {
                   // Dim slightly if hovering over unrelated course, but DO NOT hide it completely
                   opacity = 0.55; 
-                  zIndex = 0;
                 }
                 
                 return (
                   <path
                     key={line.id}
+                    data-edge={line.id}
+                    data-source={line.source}
+                    data-target={line.target}
+                    data-lane={line.lane}
+                    data-marker-size={line.markerSize}
+                    data-route-mode={line.routeMode}
                     d={createPath(line)}
                     fill="none"
                     stroke={strokeColor}
                     strokeWidth={strokeWidth}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     opacity={opacity}
                     markerEnd={markerId}
                     filter={filter}
-                    style={{ transition: 'all 0.2s', zIndex }}
+                    style={{ transition: 'all 0.2s' }}
                   />
                 );
               })}
@@ -387,7 +830,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
             {semesters.map((sem) => {
               const isSummer = (sem.semester === 'ฤดูร้อน') || (sem.title || '').includes('Summer') || (sem.title || '').includes('ฤดูร้อน');
               const coursesToRender = compactSemesterCourses(sem.courses || []);
-              const sortedCourses = sortPosterCourses(coursesToRender);
+              const sortedCourses = sortPosterCourses(sem.id, coursesToRender);
               
               const isLongBar = isSummer && sortedCourses.length <= 2;
 
@@ -400,31 +843,68 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
                     alignItems: 'stretch', 
                     position: 'relative', 
                     zIndex: 1,
-                    flexGrow: isSummer ? 0 : 1,
-                    minHeight: isSummer ? '40px' : '52px'
+                    minHeight: isSummer ? '46px' : '64px'
                   }}
                 >
                   {/* Semester Label */}
                   <div style={{ width: '70px', flexShrink: 0, textAlign: 'right', paddingTop: '4px' }}>
-                    <h3 style={{ margin: '0 0 2px 0', fontSize: '0.8rem', color: 'var(--text)', fontWeight: 700 }}>{(sem.title || '').replace('เทอม ', 'T')}</h3>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 600 }}>{sem.totalCredits} CR</div>
+                    <h3 style={{ margin: '0 0 2px 0', fontSize: '0.8rem', color: 'var(--text)', fontWeight: 700 }}>
+                      {isSummer ? (sem.yearNumber === 3 ? 'ฝึกงาน' : 'Summer') : (sem.title || '')}
+                    </h3>
+                    {!(isSummer && sem.yearNumber === 3) && (
+                      <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 600 }}>{sem.totalCredits} หน่วยกิต</div>
+                    )}
                   </div>
                   
                   {/* Courses container (Flex Wrap) */}
-                  <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '8px 12px', alignContent: 'flex-start' }}>
+                  <div style={{ flex: 1, display: 'flex', flexWrap: 'nowrap', gap: '12px 16px', overflowX: 'auto', paddingBottom: '4px', alignContent: 'flex-start' }}>
                     {isLongBar ? (
                       <div style={{ width: '100%', display: 'flex', gap: '8px' }}>
                         {sortedCourses.map(c => {
-                          const fullCourse = c.code && !c.code.includes('x') && !c.code.includes('group') ? courseIndex.findCourseByCode(c.code) : null;
+                          let fullCourse = null;
+              if (c.code === '001XXX' || c.code === 'XXXXXX') {
+                fullCourse = {
+                  id: c.courseId || c.code,
+                  code: c.code,
+                  titleTh: c.titleTh,
+                  nameTh: c.titleTh,
+                  nameEn: c.code === '001XXX' ? 'General Education' : 'Free Elective',
+                  credits: c.credits,
+                  type: c.code === '001XXX' ? 'general-education' : 'free-elective',
+                  description: `หมวดหมู่นี้ให้นิสิตเลือกเรียนวิชาใดก็ได้ที่อยู่ในหมวด ${c.titleTh}`,
+                  isSlot: true,
+                } as any;
+              } else if (c.code && !c.code.includes('x') && !c.code.includes('group')) {
+                fullCourse = courseIndex.findCourseByCode(c.code);
+              }
                           const catKey = getCourseCategory(c.code || '', c.titleTh || '');
                           const cat = CATEGORIES[catKey];
-                          const nodeId = c.code !== 'xxxxxx' && !c.code?.includes('xxx') ? c.code : c.courseId;
+                          const rawNodeId = c.code?.toLowerCase() !== 'xxxxxx' && !c.code?.toLowerCase().includes('xxx') ? c.code : c.courseId;
+                          const nodeId = c.code?.includes('group') ? `${sem.id}-${rawNodeId}` : rawNodeId;
+                          
+                          if (c.code?.startsWith('gap')) {
+                            return (
+                              <div
+                                key={nodeId}
+                                id={`cm-node-${nodeId}`}
+                                data-road-obstacle="false"
+                                style={{
+                                  flex: 1,
+                                  height: '42px',
+                                  background: 'transparent',
+                                  border: 'none',
+                                  pointerEvents: 'none'
+                                }}
+                              />
+                            );
+                          }
                           
                           return (
                             <div 
                               key={nodeId}
                               id={`cm-node-${nodeId}`}
-                              onClick={() => fullCourse && openCourse(fullCourse.id)}
+                              data-road-obstacle={isSummer ? 'false' : 'true'}
+                              onClick={() => fullCourse && openCourse(fullCourse as any)}
                               title={`${c.code} ${c.titleTh}`}
                               style={{
                                 flex: 1,
@@ -441,7 +921,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
                                 zIndex: 10
                               }}
                             >
-                              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: cat.color }}>{c.code !== 'xxxxxx' && !c.code?.includes('xxx') ? c.code : ''}</span>
+                              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: cat.color }}>{c.code?.includes('group') ? '' : c.code}</span>
                               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)' }}>{getCourseShortName(c)}</span>
                             </div>
                           )
@@ -450,29 +930,64 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
                     ) : (
                       sortedCourses.map(c => {
                         const isGroup = c.code?.includes('group');
-                        const fullCourse = c.code && !c.code.includes('x') && !isGroup ? courseIndex.findCourseByCode(c.code) : null;
+                        let fullCourse = null;
+                        if (c.code === '001XXX' || c.code === 'XXXXXX') {
+                          fullCourse = {
+                            id: c.courseId || c.code,
+                            code: c.code,
+                            titleTh: c.titleTh,
+                            nameTh: c.titleTh,
+                            nameEn: c.code === '001XXX' ? 'General Education' : 'Free Elective',
+                            credits: c.credits,
+                            type: c.code === '001XXX' ? 'general-education' : 'free-elective',
+                            description: `หมวดหมู่นี้ให้นิสิตเลือกเรียนวิชาใดก็ได้ที่อยู่ในหมวด ${c.titleTh}`,
+                            isSlot: true,
+                          } as any;
+                        } else if (c.code && !c.code.includes('x') && !isGroup) {
+                          fullCourse = courseIndex.findCourseByCode(c.code);
+                        }
                         const catKey = getCourseCategory(c.code || '', c.titleTh || '');
                         const cat = CATEGORIES[catKey];
-                        const nodeId = c.code !== 'xxxxxx' && !c.code?.includes('xxx') ? c.code : c.courseId;
+                        const rawNodeId = c.code?.toLowerCase() !== 'xxxxxx' && !c.code?.toLowerCase().includes('xxx') ? c.code : c.courseId;
+                        const nodeId = isGroup ? `${sem.id}-${rawNodeId}` : rawNodeId;
                         
+                        if (c.code?.startsWith('gap')) {
+                          return (
+                            <div
+                              key={nodeId}
+                              id={`cm-node-${nodeId}`}
+                              data-road-obstacle="false"
+                              style={{
+                                width: '100px',
+                                height: '56px',
+                                flexShrink: 0,
+                                background: 'transparent',
+                                border: 'none',
+                                pointerEvents: 'none'
+                              }}
+                            />
+                          );
+                        }
+
                         const isHovered = hoveredCourse === nodeId;
                         
                         return (
                           <div 
                             key={nodeId}
                             id={`cm-node-${nodeId}`}
+                            data-road-obstacle={isSummer ? 'false' : 'true'}
                             onClick={() => {
                               if (isGroup) {
                                 setActiveGroupCourses({ title: c.titleTh || 'Group', courses: (c as any).groupedCourses || [] });
                               } else if (fullCourse) {
-                                openCourse(fullCourse.id);
+                                openCourse(fullCourse as any);
                               }
                             }}
                             onMouseEnter={() => setHoveredCourse(nodeId || null)}
                             onMouseLeave={() => setHoveredCourse(null)}
-                            title={`${c.code !== 'xxxxxx' && !c.code?.includes('xxx') ? c.code : ''} ${c.titleTh}`}
+                            title={`${c.code?.includes('group') ? '' : c.code} ${c.titleTh}`}
                             style={{
-                              width: '96px', // Tiny nodes
+                              width: '88px',
                               height: '48px', // Compact height
                               background: cat.bg, 
                               border: `1px solid ${cat.border}`, 
@@ -493,7 +1008,7 @@ export function CurriculumGridDiagram({ courseIndex }: { courseIndex: CourseInde
                           >
 
                             <div style={{ fontSize: '0.6rem', fontWeight: 800, color: cat.color, marginBottom: '2px', lineHeight: 1 }}>
-                              {isGroup ? 'Group' : (c.code !== 'xxxxxx' && !c.code?.includes('xxx') ? c.code : '')}
+                              {isGroup ? 'Group' : c.code}
                             </div>
                             <div style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text)', lineHeight: 1.1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                               {isGroup ? c.titleTh : getCourseShortName(c)}

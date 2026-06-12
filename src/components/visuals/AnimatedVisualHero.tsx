@@ -37,7 +37,7 @@ export function AnimatedVisualHero() {
         canvas.height = parent.clientHeight * dpr;
         canvas.style.width = `${parent.clientWidth}px`;
         canvas.style.height = `${parent.clientHeight}px`;
-        ctx.scale(dpr, dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         
         initBoxesAndParticles(parent.clientWidth, parent.clientHeight);
       }
@@ -176,19 +176,20 @@ export function AnimatedVisualHero() {
 
       // Spawn particles
       boxes.forEach((box, i) => {
+        const boxCount = boxes.length;
         // 1. Lines running out from center to boxes
         for (let j = 0; j < 4; j++) {
           particles.push(new Particle(centerX, centerY, box.x, box.y, box.color, true));
         }
 
         // 2. Lines running between adjacent boxes
-        const nextBox = boxes[(i + 1) % 8];
+        const nextBox = boxes[(i + 1) % boxCount];
         for (let j = 0; j < 3; j++) {
           particles.push(new Particle(box.x, box.y, nextBox.x, nextBox.y, box.color, true));
         }
         
         // 3. Lines running outwards from boxes to nowhere
-        const angle = (i * Math.PI * 2) / 8 - Math.PI / 8;
+        const angle = (i * Math.PI * 2) / boxCount - Math.PI / 8;
         for (let j = 0; j < 5; j++) {
           const spread = angle + (Math.random() - 0.5) * 0.8;
           const dist = 100 + Math.random() * 150;
