@@ -610,7 +610,7 @@ export const sources: SourceItem[] = [
     recommendedYear: 'ปี 1+',
     description: 'แหล่งเรียนรู้ออนไลน์ของมหาวิทยาลัย ใช้ตามหาคอร์สเสริมที่เกี่ยวข้องได้',
     bestFor: ['คอร์สเสริม', 'เรียนในระบบ', 'ทบทวน'],
-    link: 'https://numooc.nu.ac.th/',
+    link: 'https://lifelong.nu.ac.th/',
   },
   {
     id: 'coursera',
