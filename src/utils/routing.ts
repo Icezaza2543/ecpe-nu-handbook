@@ -50,7 +50,7 @@ const routeAliases: Record<string, (typeof canonicalRoutes)[number]> = {
   '/credits-about': '/credits',
 };
 
-const legacyBaseSegments = new Set(['ecpe-nu-handbook']);
+const legacyBaseSegments = new Set(['cpe-nu-handbook']);
 const normalizedRouteLookup = new Map<string, (typeof canonicalRoutes)[number]>();
 
 for (const route of canonicalRoutes) {

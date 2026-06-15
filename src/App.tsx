@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <CourseModalProvider courseIndex={courseIndex}>
-      <Suspense fallback={<div className="route-loading">Loading ECPE Handbook...</div>}>
+      <Suspense fallback={<div className="route-loading">Loading CPE Handbook...</div>}>
         <ScrollToTop />
         <Routes>
           <Route element={<AppLayout courseIndex={courseIndex} />}>

@@ -41,7 +41,7 @@ function getChecklist(item: SurvivalItem): string[] {
 }
 
 export function SurvivalGuidePage({ courseIndex }: { courseIndex: CourseIndex }) {
-  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('ecpe-v2-survival-checklist', {});
+  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('cpe-v2-survival-checklist', {});
   const items = getItems();
 
   return (

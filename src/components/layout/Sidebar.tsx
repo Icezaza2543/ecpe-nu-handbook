@@ -8,7 +8,7 @@ export function Sidebar() {
       <div className="brand-mark">
         <span style={{ background: 'linear-gradient(135deg, var(--primary), var(--violet))', boxShadow: '0 4px 12px rgba(123, 97, 255, 0.3)' }}>EC</span>
         <div>
-          <strong style={{ fontSize: '1.1rem', color: 'var(--text)' }}>ECPE NU</strong>
+          <strong style={{ fontSize: '1.1rem', color: 'var(--text)' }}>CPE NU</strong>
         </div>
       </div>
       

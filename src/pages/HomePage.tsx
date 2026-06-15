@@ -115,7 +115,7 @@ export function HomePage({ courseIndex }: { courseIndex: CourseIndex }) {
       <section className="home-hero">
         <div className="home-hero__copy">
           <h1>
-            ECPE NU
+            CPE NU
             <span className="text-gradient">Handbook</span>
           </h1>
           <p className="home-hero__subtitle">

@@ -6,7 +6,7 @@ export function CreditsPage() {
     <div className="page" style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
       <SectionHeader 
         title="Credits & About" 
-        description="ข้อมูลเกี่ยวกับผู้จัดทำ และที่มาของ ECPE NU Freshman Handbook"
+        description="ข้อมูลเกี่ยวกับผู้จัดทำ และที่มาของ CPE NU Freshman Handbook"
         variant="hero"
       />
 

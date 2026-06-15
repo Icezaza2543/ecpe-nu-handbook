@@ -8,7 +8,7 @@ describe('resolveRoutePath', () => {
   });
 
   it('normalizes legacy base paths and known aliases', () => {
-    expect(resolveRoutePath('/ecpe-nu-handbook/courses')).toBe('/courses');
+    expect(resolveRoutePath('/cpe-nu-handbook/courses')).toBe('/courses');
     expect(resolveRoutePath('/roadmap')).toBe('/roadmaps');
     expect(resolveRoutePath('/beyond-classroom')).toBe('/tools-sources');
   });

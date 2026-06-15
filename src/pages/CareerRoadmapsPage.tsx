@@ -92,7 +92,7 @@ function difficultyLabel(value?: string) {
 export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
   const items = roadmaps as unknown as RoadmapItem[];
   const [activeId, setActiveId] = useState(items[0]?.id || '');
-  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('ecpe-v2-career-roadmap-checklist', {});
+  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('cpe-v2-career-roadmap-checklist', {});
   const active = items.find((item) => item.id === activeId) || items[0];
   const accentColor = getRoleColor(String(active?.id || ''));
 

@@ -14,7 +14,7 @@ const checks = [
 ];
 
 export function GraduationWorkflow() {
-  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('ecpe-v2-graduation-checklist', {});
+  const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('cpe-v2-graduation-checklist', {});
   const complete = checks.filter((item) => checked[item]).length;
 
   const reset = () => {

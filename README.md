@@ -1,4 +1,4 @@
-# ECPE NU Freshman Handbook
+# CPE NU Freshman Handbook
 
 คู่มือไม่เป็นทางการสำหรับนิสิตวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยนเรศวร
 
@@ -12,7 +12,7 @@
 - Career Roadmaps แบบ skill tree พร้อมรายวิชา เครื่องมือ และไอเดีย portfolio
 - Tools & Sources รวมเครื่องมือ แหล่งเรียนรู้ และ skill gap นอกห้องเรียน
 - Survival Guide, FAQ, Senior Tips และ Credits
-- Route aliases และ fallback สำหรับ path ที่พิมพ์ผิดหรือ path เก่าจาก `/ecpe-nu-handbook/...`
+- Route aliases และ fallback สำหรับ path ที่พิมพ์ผิดหรือ path เก่าจาก `/cpe-nu-handbook/...`
 
 ## Tech Stack
 
@@ -71,7 +71,7 @@ npm run build
 ถ้าต้อง deploy บน subpath เช่น GitHub Pages ให้กำหนด env:
 
 ```bash
-VITE_BASE_PATH=/ecpe-nu-handbook/
+VITE_BASE_PATH=/cpe-nu-handbook/
 ```
 
 ## Project Notes For AI Agents
@@ -86,4 +86,4 @@ AGENTS.md
 
 ## Contributing
 
-โปรเจกต์นี้เป็น unofficial handbook สำหรับช่วยนิสิต ECPE NU หากต้องการช่วยปรับปรุง สามารถเปิด issue หรือส่ง pull request ได้ โดยควรรัน validation commands ก่อนส่งงานทุกครั้ง
+โปรเจกต์นี้เป็น unofficial handbook สำหรับช่วยนิสิต CPE NU หากต้องการช่วยปรับปรุง สามารถเปิด issue หรือส่ง pull request ได้ โดยควรรัน validation commands ก่อนส่งงานทุกครั้ง

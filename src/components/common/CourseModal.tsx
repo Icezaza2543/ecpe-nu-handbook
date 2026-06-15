@@ -86,7 +86,7 @@ export function CourseModal({ course, onClose, courseIndex }: CourseModalProps) 
                 <strong>อ้างอิง:</strong>{' '}
                 {course.sourceNote === 'อัปเดตจากไฟล์รายวิชาใหม่ที่ผู้ใช้รวบรวม' ? (
                   <a 
-                    href="http://www.ecpe.nu.ac.th/web/download/course/2565/%E0%B8%A1%E0%B8%84%E0%B8%AD.2%20%E0%B8%9B.%E0%B8%95%E0%B8%A3%E0%B8%B5%20%E0%B8%A7%E0%B8%B4%E0%B8%A8%E0%B8%A7%E0%B8%81%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%84%E0%B8%AD%E0%B8%A1%E0%B8%9E%E0%B8%B4%E0%B8%A7%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B8%9B%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B8%E0%B8%87%202565.pdf"
+                    href="http://www.cpe.nu.ac.th/web/download/course/2565/%E0%B8%A1%E0%B8%84%E0%B8%AD.2%20%E0%B8%9B.%E0%B8%95%E0%B8%A3%E0%B8%B5%20%E0%B8%A7%E0%B8%B4%E0%B8%A8%E0%B8%A7%E0%B8%81%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%84%E0%B8%AD%E0%B8%A1%E0%B8%9E%E0%B8%B4%E0%B8%A7%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C%20%E0%B8%9B%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%9B%E0%B8%A3%E0%B8%B8%E0%B8%87%202565.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: 'var(--primary)', textDecoration: 'underline' }}

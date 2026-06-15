@@ -1,11 +1,11 @@
-# ECPE NU Handbook Agent Context
+# CPE NU Handbook Agent Context
 
 This is the single source of truth for AI agents and maintainers working on this repo. Do not recreate scattered AI notes under `docs/`, `design-system/`, or migration files unless the user explicitly asks for a new documentation split.
 
 ## Product
 
-- Public name: `ECPE NU Freshman Handbook`
-- Short UI name: `ECPE NU Handbook`
+- Public name: `CPE NU Freshman Handbook`
+- Short UI name: `CPE NU Handbook`
 - Audience: Thai Computer Engineering students at Naresuan University, especially freshmen.
 - Product goal: help students understand the curriculum, prerequisites, career tracks, survival guidance, tools, sources, and portfolio direction through a polished interactive handbook.
 - Wording rule: use `Handbook` for product/system wording; avoid old OS-style internal labels.
@@ -44,7 +44,7 @@ Expected validation status as of the latest cleanup:
 - Primary target: Vercel.
 - `vercel.json` uses Vite, builds with `npm run build`, outputs `dist`, enables clean URLs, and rewrites all SPA routes to `/index.html`.
 - `vite.config.ts` defaults `base` to `/`.
-- For subpath hosting, set `VITE_BASE_PATH` or `BASE_PATH`, for example `VITE_BASE_PATH=/ecpe-nu-handbook/`.
+- For subpath hosting, set `VITE_BASE_PATH` or `BASE_PATH`, for example `VITE_BASE_PATH=/cpe-nu-handbook/`.
 - `src/main.tsx` reads the router basename from `import.meta.env.BASE_URL` through `getRouterBasename()`.
 - `index.html` uses `%BASE_URL%` for favicon and Open Graph assets.
 
@@ -62,7 +62,7 @@ Expected validation status as of the latest cleanup:
   - `/senior-tips`
   - `/credits`
 - Route aliases and typo tolerance live in `src/utils/routing.ts`.
-- Old GitHub Pages style URLs under `/ecpe-nu-handbook/...` are normalized back to canonical root routes.
+- Old GitHub Pages style URLs under `/cpe-nu-handbook/...` are normalized back to canonical root routes.
 - Unknown paths fall back to `/` instead of showing a hard error.
 - Keep route links centralized through `src/config/navigation.ts` where possible.
 
@@ -116,7 +116,7 @@ Before handing work back:
 - Check for horizontal overflow on mobile; `scrollWidth` should not exceed `innerWidth`.
 - Check that no Vite/framework overlay appears.
 - Check browser console for relevant errors/warnings.
-- For route work, smoke test canonical routes, aliases, old `/ecpe-nu-handbook/...` paths, and an unknown path.
+- For route work, smoke test canonical routes, aliases, old `/cpe-nu-handbook/...` paths, and an unknown path.
 
 ## Repository Notes
 

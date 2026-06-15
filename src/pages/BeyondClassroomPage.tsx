@@ -384,7 +384,7 @@ export function BeyondClassroomPage() {
   const [drawer, setDrawer] = useState<DrawerState | null>(null);
 
   useEffect(() => {
-    const title = 'Toolchain Lab | ECPE NU Freshman Handbook';
+    const title = 'Toolchain Lab | CPE NU Freshman Handbook';
     const description = 'เครื่องมือ แหล่งเรียนรู้ และทักษะโลกงานจริงที่นิสิต Computer Engineering ควรรู้จักตั้งแต่ปีแรก';
     document.title = title;
 
