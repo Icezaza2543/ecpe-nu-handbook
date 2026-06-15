@@ -1,6 +1,6 @@
 // Auto-migrated from ../src/data/studyPlan.js. Preserve source fields when editing.
 export const studyPlan = {
-  "sourceFile": "หลักสูตร.md",
+  "sourceFile": "computer_engineering_2565_opendataloader.md",
   "sourceConfidence": "verified-official",
   "sourceNote": "ตรวจสอบจาก หลักสูตร.md section แผนการศึกษา Study Plan",
   "years": [
@@ -118,7 +118,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -232,7 +232,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -255,7 +255,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "ผ่านวิชาบังคับปี 1 เทอม 1 ทั้งหมด"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         }
       ]
@@ -354,7 +354,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -458,7 +458,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -481,7 +481,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "ผ่านวิชาบังคับปี 1 ทั้งหมดและปี 2 เทอม 1 ทั้งหมด"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         }
       ]
@@ -589,7 +589,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -682,7 +682,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "-"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -705,7 +705,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "(ต้องปฏิบัติงานไม่น้อยกว่า 270 ชม.)"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         }
       ]
@@ -763,7 +763,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "ผ่านวิชาบังคับทั้งหมด"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         },
         {
@@ -816,7 +816,7 @@ export const studyPlan = {
               "officialPrerequisiteText": "305495 วิจัยฯ 1"
             }
           ],
-          "sourceFile": "หลักสูตร.md",
+          "sourceFile": "computer_engineering_2565_opendataloader.md",
           "sourceConfidence": "verified-official"
         }
       ]

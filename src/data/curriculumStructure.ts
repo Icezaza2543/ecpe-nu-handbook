@@ -1,7 +1,7 @@
 // Auto-migrated from ../src/data/curriculumStructure.js. Preserve source fields when editing.
 export const curriculumStructure = {
   "totalCredits": 138,
-  "sourceFile": "หลักสูตร.md",
+  "sourceFile": "computer_engineering_2565_opendataloader.md",
   "sourceConfidence": "verified-official",
   "sourceNote": "ตรวจสอบจาก หลักสูตร.md section B. โครงสร้างหลักสูตร",
   "groups": [

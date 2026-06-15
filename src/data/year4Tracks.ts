@@ -48,7 +48,7 @@ export const year4Tracks = [
     "portfolioOutcome": "เหมาะกับการสร้างผลงาน/ชิ้นงานเพื่อนำไปใช้เป็น Portfolio สมัครงาน",
     "interpretationConfidence": "senior-advice",
     "sourceConfidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourcePage": "หน้า 86"
   },
   {
@@ -93,7 +93,7 @@ export const year4Tracks = [
     "portfolioOutcome": "เหมาะกับสายที่ต้องการทำงานได้ทันที และอาจต่อยอดเป็นการจ้างงานหลังเรียนจบ",
     "interpretationConfidence": "senior-advice",
     "sourceConfidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourcePage": "หน้า 86"
   },
   {
@@ -138,7 +138,7 @@ export const year4Tracks = [
     "portfolioOutcome": "เหมาะกับการสะสมผลงานวิชาการเพื่อยื่นทุนหรือเรียนต่อระดับบัณฑิตศึกษา",
     "interpretationConfidence": "senior-advice",
     "sourceConfidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourcePage": "หน้า 87"
   }
 ];

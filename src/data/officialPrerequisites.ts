@@ -11,7 +11,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 58",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -25,7 +25,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 58",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -39,7 +39,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 65",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -53,7 +53,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 66",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -67,7 +67,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 69",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -81,7 +81,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 69",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -95,7 +95,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 71",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -109,7 +109,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 72",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -123,7 +123,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 74",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -137,7 +137,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 75",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -151,7 +151,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 76",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -165,7 +165,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 81",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -179,7 +179,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 82",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -193,7 +193,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 82",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -207,7 +207,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 86",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -221,7 +221,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 86",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   },
   {
@@ -235,7 +235,7 @@ export const officialPrerequisites = [
     "type": "official-prerequisite",
     "sourcePage": "หน้า 87",
     "confidence": "verified-official",
-    "sourceFile": "หลักสูตร.md",
+    "sourceFile": "computer_engineering_2565_opendataloader.md",
     "sourceNote": "ตรวจสอบจาก หลักสูตร.md section E. Prerequisite / วิชาตัวต่อ"
   }
 ];
