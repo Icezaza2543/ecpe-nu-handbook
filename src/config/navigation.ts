@@ -3,6 +3,7 @@ import {
   Compass,
   HelpCircle,
   Home,
+  Link2,
   Map,
   Network,
   Route,
@@ -41,6 +42,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { path: '/tools-sources', label: 'สิ่งที่มหาลัยไม่ได้สอน', icon: Compass },
       { path: '/survival-guide', label: 'คู่มือเอาตัวรอด', icon: Sparkles },
+      { path: '/useful-links', label: 'รวมลิงก์ที่มีประโยชน์', icon: Link2 },
       { path: '/faq', label: 'FAQ', icon: HelpCircle },
       { path: '/senior-tips', label: 'คำแนะนำจากรุ่นพี่', icon: Users },
     ],

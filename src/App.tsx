@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ defau
 const VisualMapsPage = lazy(() => import('./pages/VisualMapsPage').then((module) => ({ default: module.VisualMapsPage })));
 const CourseCatalogPage = lazy(() => import('./pages/CourseCatalogPage').then((module) => ({ default: module.CourseCatalogPage })));
 const CareerRoadmapsPage = lazy(() => import('./pages/CareerRoadmapsPage').then((module) => ({ default: module.CareerRoadmapsPage })));
+const UsefulLinksPage = lazy(() => import('./pages/UsefulLinksPage').then((module) => ({ default: module.UsefulLinksPage })));
 const DependencyGraphPage = lazy(() => import('./pages/DependencyGraphPage').then((module) => ({ default: module.DependencyGraphPage })));
 const SurvivalGuidePage = lazy(() => import('./pages/SurvivalGuidePage').then((module) => ({ default: module.SurvivalGuidePage })));
 const BeyondClassroomPage = lazy(() => import('./pages/BeyondClassroomPage').then((module) => ({ default: module.BeyondClassroomPage })));
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/courses" element={<CourseCatalogPage />} />
             <Route path="/roadmaps" element={<CareerRoadmapsPage />} />
             <Route path="/dependency-graph" element={<DependencyGraphPage />} />
+            <Route path="/useful-links" element={<UsefulLinksPage />} />
             <Route path="/survival-guide" element={<SurvivalGuidePage />} />
             <Route path="/tools-sources" element={<BeyondClassroomPage />} />
             <Route path="/beyond-classroom" element={<BeyondClassroomPage />} />
