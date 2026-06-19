@@ -4,6 +4,7 @@ import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppLayout } from './components/layout/AppLayout';
 import { CourseModalProvider } from './components/common/CourseModalProvider';
 import { resolveRoutePath } from './utils/routing';
+import { Analytics } from '@vercel/analytics/react';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
 const VisualMapsPage = lazy(() => import('./pages/VisualMapsPage').then((module) => ({ default: module.VisualMapsPage })));
@@ -52,6 +53,7 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+      <Analytics />
     </CourseModalProvider>
   );
 }
