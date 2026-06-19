@@ -13,7 +13,7 @@ import {
   Network,
   Route
 } from 'lucide-react';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { CriticalPathMap } from '../components/visuals/CriticalPathMap';
 import { CurriculumFlowchart } from '../components/visuals/CurriculumFlowchart';
 import { CurriculumGridDiagram } from '../components/visuals/CurriculumGridDiagram';
@@ -41,7 +41,8 @@ type VisualMapItem = {
   component: ReactNode;
 };
 
-export function VisualMapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function VisualMapsPage() {
+  const courseIndex = useCourseIndex();
   const [activeMap, setActiveMap] = useState<string | null>(null);
   const catalogCount = courseIndex.getCatalogCourses().length;
 

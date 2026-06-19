@@ -18,7 +18,7 @@ import { MotionCard } from '../components/common/MotionCard';
 import { HomeInsightDataVizSection } from '../components/home/HomeInsightDataVizSection';
 import { AnimatedDependencyMap } from '../components/home/AnimatedDependencyMap';
 import { useCourseModal } from '../components/common/CourseModalProvider';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 
 const heroMetrics = [
   { value: '138', label: 'หน่วยกิตที่ต้องวางแผน' },
@@ -77,7 +77,8 @@ function JourneyStrip() {
   );
 }
 
-export function HomePage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function HomePage() {
+  const courseIndex = useCourseIndex();
   const { openCourse } = useCourseModal();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);

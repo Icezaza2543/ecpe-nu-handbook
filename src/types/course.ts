@@ -51,7 +51,8 @@ export interface Course {
   isClickable?: boolean;
   isGeneralEducation?: boolean;
   isMajorCourse?: boolean;
-  [key: string]: unknown;
+  isSlot?: boolean;
+  dangerLevel?: 'high' | 'medium' | 'low' | string;
 }
 
 export interface CourseSearchResult {

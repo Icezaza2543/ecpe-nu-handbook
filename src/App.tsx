@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { AppLayout } from './components/layout/AppLayout';
 import { CourseModalProvider } from './components/common/CourseModalProvider';
-import { useCourseIndex } from './hooks/useCourseIndex';
 import { resolveRoutePath } from './utils/routing';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
@@ -30,24 +29,22 @@ function RouteFallback() {
 }
 
 export default function App() {
-  const courseIndex = useCourseIndex();
-
   return (
-    <CourseModalProvider courseIndex={courseIndex}>
-      <Suspense fallback={<div className="route-loading">Loading CPE Handbook...</div>}>
+    <CourseModalProvider>
+      <Suspense fallback={<div className="route-loading">กำลังโหลดคู่มือ...</div>}>
         <ScrollToTop />
         <Routes>
-          <Route element={<AppLayout courseIndex={courseIndex} />}>
-            <Route index element={<HomePage courseIndex={courseIndex} />} />
-            <Route path="/visual-maps" element={<VisualMapsPage courseIndex={courseIndex} />} />
-            <Route path="/courses" element={<CourseCatalogPage courseIndex={courseIndex} />} />
-            <Route path="/roadmaps" element={<CareerRoadmapsPage courseIndex={courseIndex} />} />
-            <Route path="/dependency-graph" element={<DependencyGraphPage courseIndex={courseIndex} />} />
-            <Route path="/survival-guide" element={<SurvivalGuidePage courseIndex={courseIndex} />} />
+          <Route element={<AppLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="/visual-maps" element={<VisualMapsPage />} />
+            <Route path="/courses" element={<CourseCatalogPage />} />
+            <Route path="/roadmaps" element={<CareerRoadmapsPage />} />
+            <Route path="/dependency-graph" element={<DependencyGraphPage />} />
+            <Route path="/survival-guide" element={<SurvivalGuidePage />} />
             <Route path="/tools-sources" element={<BeyondClassroomPage />} />
             <Route path="/beyond-classroom" element={<BeyondClassroomPage />} />
-            <Route path="/faq" element={<FAQPage courseIndex={courseIndex} />} />
-            <Route path="/senior-tips" element={<SeniorTipsPage courseIndex={courseIndex} />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/senior-tips" element={<SeniorTipsPage />} />
             <Route path="/credits" element={<CreditsPage />} />
             <Route path="*" element={<RouteFallback />} />
           </Route>

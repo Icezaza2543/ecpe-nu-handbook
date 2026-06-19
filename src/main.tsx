@@ -7,27 +7,23 @@ import './styles/home.css';
 import './styles/roadmaps.css';
 import './styles/patterns.css';
 
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { getRouterBasename } from './utils/routing';
 
-import { validateStaticData } from './schemas/validateData';
-import { courses } from './data/courses';
-import { studyPlan } from './data/studyPlan';
-import { curriculumStructure } from './data/curriculumStructure';
-import { officialPrerequisites } from './data/officialPrerequisites';
+import { CourseIndexProvider } from './contexts/CourseIndexContext';
 
-if (import.meta.env.DEV) {
-  validateStaticData(courses, studyPlan.years as any[], (curriculumStructure as any).categories || [], officialPrerequisites);
-}
 const routerBasename = getRouterBasename();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter basename={routerBasename}>
-      <App />
+      <CourseIndexProvider>
+        <App />
+      </CourseIndexProvider>
     </BrowserRouter>
   </StrictMode>,
 );

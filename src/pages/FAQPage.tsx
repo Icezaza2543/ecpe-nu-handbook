@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { faqs } from '../data/faqs';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { includesNormalized } from '../utils/search';
 import { CourseChip } from '../components/common/CourseChip';
 import { SearchBox } from '../components/common/SearchBox';
@@ -15,7 +15,8 @@ interface FAQItem {
   relatedCourses?: string[];
 }
 
-export function FAQPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function FAQPage() {
+  const courseIndex = useCourseIndex();
   const [query, setQuery] = useState('');
   const items = faqs as FAQItem[];
   const filtered = useMemo(() => items.filter((item) => includesNormalized(`${item.question} ${item.shortAnswer} ${item.category}`, query)), [items, query]);

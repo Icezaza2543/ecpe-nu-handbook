@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from 'react';
 import { roadmaps } from '../data/roadmaps';
 import type { RoadmapItem } from '../types/roadmap';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { CourseChip } from '../components/common/CourseChip';
 import {
   AlertTriangle,
@@ -89,7 +89,8 @@ function difficultyLabel(value?: string) {
   return value || 'ไม่ระบุ';
 }
 
-export function CareerRoadmapsPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function CareerRoadmapsPage() {
+  const courseIndex = useCourseIndex();
   const items = roadmaps as unknown as RoadmapItem[];
   const [activeId, setActiveId] = useState(items[0]?.id || '');
   const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('cpe-v2-career-roadmap-checklist', {});

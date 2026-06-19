@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { seniorTips } from '../data/seniorTips';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { includesNormalized } from '../utils/search';
 import { CourseChip } from '../components/common/CourseChip';
 import { SearchBox } from '../components/common/SearchBox';
@@ -35,7 +35,8 @@ function tipText(item: string | SeniorTip): string {
   return [item.title, item.content || item.description].filter(Boolean).join(': ');
 }
 
-export function SeniorTipsPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function SeniorTipsPage() {
+  const courseIndex = useCourseIndex();
   const [query, setQuery] = useState('');
   const tips = getTips();
   const filtered = useMemo(() => tips.filter((tip) => includesNormalized(`${tip.title} ${tip.topic} ${tip.description}`, query)), [query, tips]);

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import type { Course } from '../types/course';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { Badge } from '../components/common/Badge';
@@ -69,7 +69,8 @@ function getCourseTitle(course: Course) {
   return course.nameTh || course.titleTh || course.title || course.nameEn || course.id;
 }
 
-export function CourseCatalogPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function CourseCatalogPage() {
+  const courseIndex = useCourseIndex();
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
   const [sort, setSort] = useState<SortMode>('code');

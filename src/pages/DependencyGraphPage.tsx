@@ -7,7 +7,7 @@ import {
   Radar,
   ShieldCheck,
 } from 'lucide-react';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { CriticalPathMap } from '../components/visuals/CriticalPathMap';
 import { OfficialPrerequisiteGraph } from '../components/visuals/OfficialPrerequisiteGraph';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
@@ -48,7 +48,8 @@ const modeCopy: Record<
   },
 };
 
-export function DependencyGraphPage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function DependencyGraphPage() {
+  const courseIndex = useCourseIndex();
   const [activeMode, setActiveMode] = useState<DependencyMode>('official');
 
   const officialEdgesCount = (officialPrerequisites as any[]).filter((edge) => edge.from && edge.to).length;

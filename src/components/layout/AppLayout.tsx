@@ -1,9 +1,8 @@
 import { Outlet } from 'react-router-dom';
-import type { CourseIndex } from '../../utils/courseIndex';
 import { MobileNav } from './MobileNav';
 import { Sidebar } from './Sidebar';
 
-export function AppLayout({ courseIndex }: { courseIndex: CourseIndex }) {
+export function AppLayout() {
   return (
     <div className="app-shell">
       <Sidebar />

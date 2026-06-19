@@ -1,6 +1,6 @@
 import { survivalGuide } from '../data/survivalGuide';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import type { CourseIndex } from '../utils/courseIndex';
+import { useCourseIndex } from '../hooks/useCourseIndex';
 import { CourseChip } from '../components/common/CourseChip';
 import { SectionHeader } from '../components/common/SectionHeader';
 
@@ -40,7 +40,8 @@ function getChecklist(item: SurvivalItem): string[] {
   ].filter(Boolean);
 }
 
-export function SurvivalGuidePage({ courseIndex }: { courseIndex: CourseIndex }) {
+export function SurvivalGuidePage() {
+  const courseIndex = useCourseIndex();
   const [checked, setChecked] = useLocalStorage<Record<string, boolean>>('cpe-v2-survival-checklist', {});
   const items = getItems();
 
